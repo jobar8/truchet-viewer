@@ -1,15 +1,51 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
-name = "truchet"
+name = "truchet-viewer"
 version = "0.1.0"
-description = "Add your description here"
+description = "A Python library for generating multi-scale Truchet tile patterns and images using PyCairo"
 readme = "README.md"
 requires-python = ">=3.12"
+license = { file = "LICENSE.txt" }
+authors = [
+    { name = "jobar8" }
+]
+keywords = ["truchet", "tiles", "graphics", "cairo", "generative-art"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Artistic Software",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+]
+
 dependencies = [
     "ipywidgets>=8.1.7",
     "jupyterlab>=4.4.3",
-    "numpy",
+    "numpy>=1.24.0",
     "pillow>=11.2.1",
     "pycairo>=1.28.0",
     "shapely>=2.1.1",
     "tqdm>=4.67.1",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.0",
+    "pytest>=7.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/jobar8/truchet-viewer"
+Repository = "https://github.com/jobar8/truchet-viewer.git"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/truchet_viewer"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
