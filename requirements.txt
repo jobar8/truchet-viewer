@@ -1,0 +1,9 @@
+# On mac will also need:
+#   brew install cmake pkgconf cairo
+ipywidgets
+jupyterlab
+numpy<2.0.0
+pillow
+pycairo
+shapely
+tqdm
