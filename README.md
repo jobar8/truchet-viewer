@@ -1,3 +1,5 @@
+An app to explorer Truchet patterns
+
 A Jupyter notebook implementation of [Christopher Carlson][carlson]'s
 multi-scale Truchet tiles.
 
