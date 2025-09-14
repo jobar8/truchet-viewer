@@ -1,5 +1,5 @@
-from drawing import CE, CS, CW, CN, DEG90
-from tiler import TileBase, rotations
+from truchet_viewer.drawing import CE, CS, CW, CN, DEG90
+from truchet_viewer.tiler import TileBase, rotations
 
 
 class CarlsonTile(TileBase):

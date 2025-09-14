@@ -5,8 +5,8 @@ import random
 import numpy as np
 from PIL import Image
 
-from drawing import cairo_context
-from helpers import array_slices_2d, color, range2d, closest
+from truchet_viewer.drawing import cairo_context
+from truchet_viewer.helpers import array_slices_2d, color, range2d, closest
 
 def rotations(cls, num_rots=4):
     return map(cls, range(num_rots))

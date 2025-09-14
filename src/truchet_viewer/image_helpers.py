@@ -1,5 +1,5 @@
-from drawing import cairo_context
-from helpers import range2d
+from truchet_viewer.drawing import cairo_context
+from truchet_viewer.helpers import range2d
 
 import numpy as np
 

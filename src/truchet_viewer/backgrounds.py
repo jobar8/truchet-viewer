@@ -1,6 +1,6 @@
-from helpers import make_bgfg
-from n6 import n6_circles
-from tiler import multiscale_truchet
+from truchet_viewer.helpers import make_bgfg
+from truchet_viewer.n6 import n6_circles
+from truchet_viewer.tiler import multiscale_truchet
 
 DIR = "~/wallpaper/tru6/1680"
 NIMG = 30
