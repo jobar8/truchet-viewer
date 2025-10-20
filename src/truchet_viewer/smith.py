@@ -20,8 +20,7 @@ class SmithTile:
         ctx.fill()
         ctx.set_source_rgba(*bgfg[1])
 
-    def draw(self, ctx, wh):
-        ...
+    def draw(self, ctx, wh): ...
 
 
 class SmithLeftTile(SmithTile):

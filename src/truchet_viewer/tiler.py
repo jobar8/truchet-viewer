@@ -8,8 +8,10 @@ from PIL import Image
 from truchet_viewer.drawing import cairo_context
 from truchet_viewer.helpers import array_slices_2d, color, range2d, closest
 
+
 def rotations(cls, num_rots=4):
     return map(cls, range(num_rots))
+
 
 def collect(tile_list, repeat=1, rotations=None, flip=None):
     def _dec(cls):
@@ -25,6 +27,7 @@ def collect(tile_list, repeat=1, rotations=None, flip=None):
                 for flipped in flips:
                     tile_list.append(cls(rot=rot, flipped=flipped))
         return cls
+
     return _dec
 
 
@@ -48,8 +51,7 @@ class TileBase:
         self.rot = rot
         self.flipped = flipped
 
-    def init_tile(self, ctx, g, base_color=None):
-        ...
+    def init_tile(self, ctx, g, base_color=None): ...
 
     def draw_tile(self, ctx, wh, bgfg=None, base_color=None, meth_name="draw"):
         g = self.G(wh, bgfg)
@@ -57,10 +59,11 @@ class TileBase:
         getattr(self, meth_name)(ctx, g)
 
 
-
 def tile_value(tile):
     """The gray value of a tile from 0 (black) to 1 (white)."""
-    pic = multiscale_truchet(tiles=[tile], width=10, height=10, tilew=10, nlayers=1, format="png")
+    pic = multiscale_truchet(
+        tiles=[tile], width=10, height=10, tilew=10, nlayers=1, format="png"
+    )
     a = np.array(Image.open(pic.pngio).convert("L"))
     value = np.sum(a) / a.size / 255
     return value
@@ -70,7 +73,9 @@ def tile_value4(tile):
     """The four-quadrant gray values (0->1) of a tile."""
     pw = 10
     pw2 = pw // 2
-    pic = multiscale_truchet(tiles=[tile], width=pw, height=pw, tilew=pw, nlayers=1, format="png")
+    pic = multiscale_truchet(
+        tiles=[tile], width=pw, height=pw, tilew=pw, nlayers=1, format="png"
+    )
     a = np.array(Image.open(pic.pngio).convert("L"))
     values = []
     for a4 in array_slices_2d(a, 0, 0, nx=2, dx=pw2):
@@ -111,7 +116,7 @@ def value_chart(tiles, inverted=False):
 def show_tiles(
     tiles,
     size=100,
-    frac=.6,
+    frac=0.6,
     width=950,
     with_value=False,
     with_name=False,
@@ -178,18 +183,18 @@ def show_overlap(tile):
     bgfg = [color(1), color(0)]
     with cairo_context(W, W) as ctx:
         ctx.rectangle(0, 0, W, W)
-        ctx.set_source_rgb(.75, .75, .75)
+        ctx.set_source_rgb(0.75, 0.75, 0.75)
         ctx.fill()
         ctx.save()
-        ctx.translate(W/4, W/4)
-        tile.draw(ctx, W/2, bgfg)
+        ctx.translate(W / 4, W / 4)
+        tile.draw(ctx, W / 2, bgfg)
         ctx.restore()
         offset = 0
-        bgfg = [color((0, 0, .7)), color((1, .5, .5))]
+        bgfg = [color((0, 0, 0.7)), color((1, 0.5, 0.5))]
         for x, y in range2d(2, 2):
             ctx.save()
-            ctx.translate(W/4 + x * W/4 + offset, W/4 + y * W/4 + offset)
-            tile.draw(ctx, W/4, bgfg)
+            ctx.translate(W / 4 + x * W / 4 + offset, W / 4 + y * W / 4 + offset)
+            tile.draw(ctx, W / 4, bgfg)
             ctx.restore()
     return ctx
 
@@ -223,7 +228,9 @@ def multiscale_truchet(
         chance = lambda *a, **k: _chance
 
     if should_split is None:
-        should_split = lambda x, y, size, ilayer: rand.random() <= chance(x, y, size, ilayer)
+        should_split = lambda x, y, size, ilayer: rand.random() <= chance(
+            x, y, size, ilayer
+        )
 
     def one_tile(x, y, size, ilayer):
         tile = tile_chooser(x / width, y / width, size / width, ilayer)
@@ -239,7 +246,9 @@ def multiscale_truchet(
         bgfg = [color(bg), color(fg)]
         wextra = 1 if (width % tilew) else 0
         hextra = 1 if (height % tilew) else 0
-        for ox, oy in range2d(int(width / tilew) + wextra, int(height / tilew) + hextra):
+        for ox, oy in range2d(
+            int(width / tilew) + wextra, int(height / tilew) + hextra
+        ):
             one_tile(ox * tilew, oy * tilew, tilew, 0)
 
         for ilayer in range(nlayers - 1):
@@ -247,14 +256,19 @@ def multiscale_truchet(
             bgfg = bgfg[::-1]
             boxes = []
             for bx, by, bsize in last_boxes:
-                if should_split((bx + bsize/2)/ width, (by + bsize/2) / height, bsize / width, ilayer):
+                if should_split(
+                    (bx + bsize / 2) / width,
+                    (by + bsize / 2) / height,
+                    bsize / width,
+                    ilayer,
+                ):
                     nbsize = bsize / 2
                     for dx, dy in range2d(2, 2):
                         nbx, nby = bx + dx * nbsize, by + dy * nbsize
-                        one_tile(nbx, nby, nbsize, ilayer+1)
+                        one_tile(nbx, nby, nbsize, ilayer + 1)
 
         if grid:
-            ctx.set_line_width(.5)
+            ctx.set_line_width(0.5)
             ctx.set_source_rgb(1, 0, 0)
             for x, y, size in all_boxes:
                 ctx.rectangle(x, y, size, size)
@@ -267,7 +281,9 @@ def nearest(levels, data):
     """Find the values in a closest to the values in b"""
     data_shape = data.shape
     linear = data.reshape((math.prod(data_shape),))
-    adjusted = levels[np.argmin(np.abs(levels[:, np.newaxis] - linear[np.newaxis, :]), axis=0)]
+    adjusted = levels[
+        np.argmin(np.abs(levels[:, np.newaxis] - linear[np.newaxis, :]), axis=0)
+    ]
     return adjusted.reshape(data_shape)
 
 
@@ -314,16 +330,16 @@ def image_truchet(
     lmax = 1 - scale * (1 - lmax)
     imin *= scale
     imax = 1 - scale * (1 - imax)
-    image = image - imin    # make a copy of the image
-    image /= (imax - imin)
-    image *= (lmax - lmin)
+    image = image - imin  # make a copy of the image
+    image /= imax - imin
+    image *= lmax - lmin
     image += lmin
 
     def tile_chooser(ux, uy, us, ilayer):
         ix = int(ux * image.shape[0])
         iy = int(uy * image.shape[1])
         isize = int(us * image.shape[0])
-        color = np.mean(image[iy:iy+isize, ix:ix+isize])
+        color = np.mean(image[iy : iy + isize, ix : ix + isize])
         if jitter:
             color += rand.random() * jitter * 2 - jitter
         close_color = closest(color, levelss[ilayer % 2])
@@ -331,7 +347,7 @@ def image_truchet(
         return rand.choice(tiles)
 
     def should_split(ux, uy, us, _):
-        nsplit = 2 ** split_test
+        nsplit = 2**split_test
         ix = int(ux * image.shape[0])
         iy = int(uy * image.shape[1])
         isize = int(us * image.shape[0] / nsplit)
@@ -402,7 +418,7 @@ def image_truchet4(
         return best_tile
 
     def should_split(ux, uy, us, _):
-        nsplit = 2 ** split_test
+        nsplit = 2**split_test
         ix = int(ux * image.shape[0])
         iy = int(uy * image.shape[1])
         isize = int(us * image.shape[0] / nsplit)

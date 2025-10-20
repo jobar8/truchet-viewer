@@ -3,15 +3,21 @@ from truchet_viewer.helpers import range2d
 
 import numpy as np
 
+
 def downsample_by_averaging(img, window_shape):
     return np.mean(
-        img.reshape((
-            *img.shape[:-2],
-            img.shape[-2] // window_shape[-2], window_shape[-2],
-            img.shape[-1] // window_shape[-1], window_shape[-1],
-        )),
+        img.reshape(
+            (
+                *img.shape[:-2],
+                img.shape[-2] // window_shape[-2],
+                window_shape[-2],
+                img.shape[-1] // window_shape[-1],
+                window_shape[-1],
+            )
+        ),
         axis=(-1, -3),
     )
+
 
 def show_array_as_blocks(image, width, tilew):
     imgh, imgw = image.shape
