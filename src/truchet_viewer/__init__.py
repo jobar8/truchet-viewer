@@ -18,14 +18,14 @@ from .n6 import (
 )
 
 __all__ = [
-    'TileBase',
-    'multiscale_truchet',
-    'image_truchet',
-    'image_truchet4',
-    'show_tiles',
-    'tile_value',
-    'tile_value4',
-    'n6_tiles',
-    'n6_circles',
-    'n6_lattice',
+    "TileBase",
+    "multiscale_truchet",
+    "image_truchet",
+    "image_truchet4",
+    "show_tiles",
+    "tile_value",
+    "tile_value4",
+    "n6_tiles",
+    "n6_circles",
+    "n6_lattice",
 ]

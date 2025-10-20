@@ -1,4 +1,3 @@
-
 from truchet_viewer.drawing import CE, CS, CW, CN, DEG90, DEG180
 from truchet_viewer.tiler import TileBase, collect, stroke
 
@@ -9,6 +8,7 @@ n6_circles = []
 n6_weird = []
 n6_filled = []
 n6_lattice = []
+
 
 class Tile(TileBase):
     """Multi-scale truchet tiles of my own devising."""
@@ -54,7 +54,7 @@ class Tile(TileBase):
         ctx.fill()
 
     @stroke
-    def four_corners(self, ctx, g, which=(0,1,2,3)):
+    def four_corners(self, ctx, g, which=(0, 1, 2, 3)):
         with ctx.save_restore():
             for i in which:
                 with ctx.rotated(g.wh, i):
@@ -63,6 +63,7 @@ class Tile(TileBase):
                     ctx.arc(0, g.w3c, g.w1c, CS, CN)
                     ctx.arc_negative(0, 0, g.w16, CS, CE)
                     ctx.fill()
+
     @stroke
     def all_dots(self, ctx, g):
         for a in [g.w3c, g.w9c]:
@@ -170,8 +171,7 @@ class Tile(TileBase):
         ctx.arc(0, g.w12, g.w26, CE, CS)
         ctx.fill()
 
-    def draw(self, ctx, g):
-        ...
+    def draw(self, ctx, g): ...
 
 
 @collect(n6_tiles)
@@ -182,6 +182,7 @@ class Slash21(Tile):
         self.dot(ctx, g, g.wh, g.w3c)
         self.dot(ctx, g, g.w3c, g.wh)
         self.four_corners(ctx, g, which=(0, 2))
+
 
 @collect(n6_tiles)
 @collect(n6_circles, repeat=3)
@@ -194,6 +195,7 @@ class Slash11(Tile):
         self.dot(ctx, g, g.w3c, 0)
         self.four_corners(ctx, g, which=(2,))
 
+
 @collect(n6_tiles)
 @collect(n6_circles, repeat=3)
 class Slash2(Tile):
@@ -204,6 +206,7 @@ class Slash2(Tile):
         self.dot(ctx, g, g.wh, g.w9c)
         self.dot(ctx, g, g.w9c, g.wh)
         self.four_corners(ctx, g, which=(0,))
+
 
 @collect(n6_weird)
 @collect(n6_lattice)
@@ -217,6 +220,7 @@ class SlashCross(Tile):
         self.dot(ctx, g, 0, g.w3c)
         self.dot(ctx, g, g.w9c, g.wh)
 
+
 @collect(n6_tiles)
 @collect(n6_circles, repeat=2)
 class Cowboy(Tile):
@@ -225,6 +229,7 @@ class Cowboy(Tile):
         self.four_corners(ctx, g, which=(2,))
         self.dot(ctx, g, g.wh, g.w3c)
         self.dot(ctx, g, g.w3c, g.wh)
+
 
 @collect(n6_tiles)
 class CowboyMinus(Tile):
@@ -235,11 +240,14 @@ class CowboyMinus(Tile):
         self.dot(ctx, g, g.wh, g.w9c)
         self.dot(ctx, g, g.w9c, g.wh)
 
+
 @collect(n6_tiles)
 class Empty(Tile):
     rotations = 1
+
     def draw(self, ctx, g):
         self.all_dots(ctx, g)
+
 
 @collect(n6_tiles)
 class Empty1(Tile):
@@ -247,9 +255,11 @@ class Empty1(Tile):
         self.all_dots(ctx, g)
         self.dot(ctx, g, g.w12, g.w3c)
 
+
 @collect(n6_tiles)
 class Dotted(Tile):
     rotations = 1
+
     def draw(self, ctx, g):
         self.all_dots(ctx, g)
         self.dot(ctx, g, g.w12, g.w3c)
@@ -257,11 +267,13 @@ class Dotted(Tile):
         self.dot(ctx, g, g.w9c, g.w12)
         self.dot(ctx, g, g.w12, g.w9c)
 
+
 @collect(n6_tiles)
 @collect(n6_filled)
 @collect(n6_connected)
 class Filled(Tile):
     rotations = 1
+
     def draw(self, ctx, g):
         ctx.arc(g.w3c, 0, g.w1c, CW, CE)
         ctx.arc_negative(g.w12, 0, g.w16, CW, CE)
@@ -288,6 +300,7 @@ class Filled(Tile):
 @collect(n6_connected)
 class FilledHollow(Filled):
     rotations = 1
+
     def draw(self, ctx, g):
         super().draw(ctx, g)
         ctx.set_source_rgba(*g.bgfg[0])
@@ -300,6 +313,7 @@ class FilledHollow(Filled):
 @collect(n6_filled)
 class Filled12(Tile):
     rotations = 2
+
     def draw(self, ctx, g):
         ctx.arc(g.wh, g.w3c, g.w1c, CN, CS)
         ctx.arc_negative(g.wh, g.w12, g.w16, CN, CS)
@@ -318,6 +332,7 @@ class Filled12(Tile):
 @collect(n6_filled)
 class Filled12Hollow(Filled12):
     rotations = 2
+
     def draw(self, ctx, g):
         super().draw(ctx, g)
         ctx.set_source_rgba(*g.bgfg[0])
@@ -399,6 +414,7 @@ class Filled34Hollow(Filled34):
 @collect(n6_connected)
 class EdgeHash(Tile):
     rotations = 1
+
     def draw(self, ctx, g):
         for i in range(4):
             with ctx.rotated(g.wh, i):
@@ -409,6 +425,7 @@ class EdgeHash(Tile):
 @collect(n6_connected)
 class MidLoop(Tile):
     rotations = 4
+
     def draw(self, ctx, g):
         with ctx.rotated(g.wh, 2):
             self.top_edge(ctx, g)
@@ -420,6 +437,7 @@ class MidLoop(Tile):
 class MidLoopHalfSparse(Tile):
     rotations = 4
     flip = True
+
     def draw(self, ctx, g):
         with ctx.rotated(g.wh, 2):
             self.top_edge(ctx, g)
@@ -428,9 +446,11 @@ class MidLoopHalfSparse(Tile):
         self.dot(ctx, g, g.wh, g.w3c)
         self.mid_loop(ctx, g)
 
+
 @collect(n6_tiles)
 class MidLoopTopSparse(Tile):
     rotations = 4
+
     def draw(self, ctx, g):
         with ctx.rotated(g.wh, 2):
             self.top_edge(ctx, g)
@@ -440,9 +460,11 @@ class MidLoopTopSparse(Tile):
         self.dot(ctx, g, g.wh, g.w3c)
         self.mid_loop(ctx, g)
 
+
 @collect(n6_tiles)
 class MidLoopAllSparse(Tile):
     rotations = 4
+
     def draw(self, ctx, g):
         self.dot(ctx, g, g.w3c, g.wh)
         self.dot(ctx, g, g.w9c, g.wh)
@@ -452,10 +474,12 @@ class MidLoopAllSparse(Tile):
         self.dot(ctx, g, g.wh, g.w3c)
         self.mid_loop(ctx, g)
 
+
 @collect(n6_tiles)
 @collect(n6_connected)
 class EdgeHashBar(Tile):
     rotations = 4
+
     def draw(self, ctx, g):
         for i in range(4):
             with ctx.rotated(g.wh, i):
@@ -475,6 +499,7 @@ class Edge34(Tile):
         self.dot(ctx, g, 0, g.w3c)
         self.dot(ctx, g, 0, g.w9c)
 
+
 @collect(n6_tiles)
 @collect(n6_circles)
 class Edge34Bar(Tile):
@@ -489,10 +514,12 @@ class Edge34Bar(Tile):
         with ctx.rotated(g.wh, 1):
             self.bar(ctx, g)
 
+
 @collect(n6_tiles)
 @collect(n6_circles)
 class HourGlass(Tile):
     rotations = 2
+
     def draw(self, ctx, g):
         with ctx.save_restore():
             for _ in range(2):
@@ -503,10 +530,12 @@ class HourGlass(Tile):
             for y in [g.w3c, g.w9c]:
                 self.dot(ctx, g, x, y)
 
+
 @collect(n6_tiles)
 @collect(n6_circles)
 class ThatWay(Tile):
     flip = True
+
     def draw(self, ctx, g):
         self.top_edge(ctx, g)
         self.dot(ctx, g, 0, g.w3c)
@@ -518,11 +547,13 @@ class ThatWay(Tile):
             ctx.rotate(DEG180)
             self.ell(ctx, g)
 
+
 @collect(n6_tiles)
 @collect(n6_circles)
 class ThoseWays(Tile):
     rotations = 2
     flip = True
+
     def draw(self, ctx, g):
         self.dot(ctx, g, g.w3c, 0)
         self.dot(ctx, g, g.wh, g.w3c)
@@ -532,10 +563,12 @@ class ThoseWays(Tile):
         with ctx.rotated(g.wh, 2):
             self.ell(ctx, g)
 
+
 @collect(n6_tiles)
 @collect(n6_circles)
 class ThoseWaysX(Tile):
     flip = True
+
     def draw(self, ctx, g):
         self.top_edge(ctx, g)
         self.dot(ctx, g, g.w3c, 0)
@@ -545,6 +578,7 @@ class ThoseWaysX(Tile):
         self.ell(ctx, g)
         with ctx.rotated(g.wh, 2):
             self.ell(ctx, g)
+
 
 @collect(n6_connected)
 @collect(n6_weird)
@@ -558,6 +592,7 @@ class Kanji(Tile):
         with ctx.rotated(g.wh, 1):
             self.top_edge(ctx, g)
 
+
 @collect(n6_connected)
 @collect(n6_weird)
 @collect(n6_lattice)
@@ -568,17 +603,21 @@ class KanjiGapped(Kanji):
         with ctx.rotated(g.wh, 3):
             self.half_bar_gapped(ctx, g)
 
+
 @collect(n6_tiles)
 @collect(n6_connected)
 @collect(n6_circles)
 class CornerHash(Tile):
     rotations = 1
+
     def draw(self, ctx, g):
         self.four_corners(ctx, g)
+
 
 @collect(n6_weird)
 class Octagon(Tile):
     rotations = 1
+
     def draw(self, ctx, g):
         self.four_corners(ctx, g)
         for i in range(4):
@@ -590,9 +629,10 @@ class Octagon(Tile):
 @collect(n6_circles)
 class Corner34(Tile):
     def draw(self, ctx, g):
-        self.four_corners(ctx, g, which=(0,1,2))
+        self.four_corners(ctx, g, which=(0, 1, 2))
         self.dot(ctx, g, 0, g.w9c)
         self.dot(ctx, g, g.w3c, g.wh)
+
 
 @collect(n6_tiles)
 @collect(n6_connected)
@@ -602,6 +642,7 @@ class SwimSuit(Tile):
         self.four_corners(ctx, g)
         self.top_edge(ctx, g)
 
+
 @collect(n6_tiles)
 @collect(n6_connected)
 @collect(n6_circles)
@@ -609,6 +650,7 @@ class SwimSuit2(Tile):
     def draw(self, ctx, g):
         self.four_corners(ctx, g)
         self.high_frown(ctx, g)
+
 
 @collect(n6_tiles)
 @collect(n6_connected)
@@ -618,6 +660,7 @@ class SwimSuit2Plus(Tile):
         self.four_corners(ctx, g)
         self.high_frown(ctx, g)
         self.dot(ctx, g, g.w12, g.w9c)
+
 
 @collect(n6_tiles)
 @collect(n6_circles)
@@ -640,6 +683,7 @@ class SadFace(Tile):
         ctx.arc_negative(g.w12, g.wh, g.w16, CE, CW)
         ctx.fill()
 
+
 @collect(n6_tiles)
 @collect(n6_circles)
 class SadFaceHigh(Tile):
@@ -656,6 +700,7 @@ class SadFaceHigh(Tile):
         self.dot(ctx, g, 0, g.w9c)
         self.dot(ctx, g, g.wh, g.w9c)
         self.high_frown(ctx, g)
+
 
 @collect(n6_tiles)
 @collect(n6_circles)
@@ -693,6 +738,7 @@ class CrossCross(Tile):
         self.dot(ctx, g, g.w3c, g.wh)
         self.dot(ctx, g, g.wh, g.w3c)
 
+
 @collect(n6_lattice)
 class CrossCrossSlash(CrossCross):
     def draw(self, ctx, g):
@@ -701,6 +747,7 @@ class CrossCrossSlash(CrossCross):
             self.slash_gapped(ctx, g)
         with ctx.rotated(g.wh, 1):
             self.half_bar_gapped(ctx, g)
+
 
 @collect(n6_lattice)
 class Hash(Tile):
@@ -723,12 +770,14 @@ class CornerSlash(Tile):
         self.four_corners(ctx, g)
         self.slash(ctx, g)
 
+
 @collect(n6_tiles)
 class CornerSlashMinus(Tile):
     def draw(self, ctx, g):
-        self.four_corners(ctx, g, which=(0,2,3))
+        self.four_corners(ctx, g, which=(0, 2, 3))
         self.slash(ctx, g)
         self.dot(ctx, g, g.wh, g.w3c)
+
 
 @collect(n6_connected)
 @collect(n6_weird)
@@ -739,6 +788,7 @@ class CornerSlashCross(Tile):
             self.slash_gapped(ctx, g)
         self.four_corners(ctx, g)
 
+
 @collect(n6_weird)
 @collect(n6_lattice)
 class CornerSlashCrossUnder(Tile):
@@ -748,13 +798,15 @@ class CornerSlashCrossUnder(Tile):
         with ctx.flip_lr(g.wh):
             self.slash_gapped(ctx, g)
 
+
 @collect(n6_weird)
 class Sprout(Tile):
     def draw(self, ctx, g):
         self.slash(ctx, g)
         self.ell(ctx, g)
-        self.four_corners(ctx, g, which=(1,2,3))
+        self.four_corners(ctx, g, which=(1, 2, 3))
         self.dot(ctx, g, g.w3c, 0)
+
 
 @collect(n6_tiles)
 @collect(n6_circles)
@@ -767,6 +819,7 @@ class DoubleEll(Tile):
         self.four_corners(ctx, g, which=(2,))
         self.dot(ctx, g, g.wh, g.w3c)
         self.dot(ctx, g, g.w3c, g.wh)
+
 
 @collect(n6_circles)
 class TopEdge(Tile):
@@ -792,8 +845,12 @@ n6_strokes = []
 for meth_name in dir(Tile):
     meth = getattr(Tile, meth_name, None)
     if getattr(meth, "is_stroke", False):
+
         class _OneStroke(Tile):
             def draw_tile(self, ctx, wh, meth_name=meth_name):
-                super().draw_tile(ctx, wh, base_color=(1, .65, .65), meth_name=meth_name)
+                super().draw_tile(
+                    ctx, wh, base_color=(1, 0.65, 0.65), meth_name=meth_name
+                )
+
         cls = type(meth_name, (_OneStroke,), {})
         n6_strokes.append(cls())
