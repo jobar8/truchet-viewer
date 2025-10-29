@@ -228,9 +228,6 @@ def multiscale_truchet(
             return _chance
 
     if should_split is None:
-        should_split = lambda x, y, size, ilayer: rand.random() <= chance(
-            x, y, size, ilayer
-        )
 
         def should_split(x, y, size, ilayer):
             return rand.random() <= chance(x, y, size, ilayer)
