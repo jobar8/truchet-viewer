@@ -1,15 +1,18 @@
 import collections
 import math
 import random
+from typing import Callable
 
 import numpy as np
 from PIL import Image
 
-from truchet_viewer.drawing import cairo_context
+from truchet_viewer.drawing import cairo_context, _CairoContext
 from truchet_viewer.helpers import array_slices_2d, color, range2d, closest
+
 
 def rotations(cls, num_rots=4):
     return map(cls, range(num_rots))
+
 
 def collect(tile_list, repeat=1, rotations=None, flip=None):
     def _dec(cls):
@@ -25,6 +28,7 @@ def collect(tile_list, repeat=1, rotations=None, flip=None):
                 for flipped in flips:
                     tile_list.append(cls(rot=rot, flipped=flipped))
         return cls
+
     return _dec
 
 
@@ -48,14 +52,12 @@ class TileBase:
         self.rot = rot
         self.flipped = flipped
 
-    def init_tile(self, ctx, g, base_color=None):
-        ...
+    def init_tile(self, ctx, g, base_color=None): ...
 
     def draw_tile(self, ctx, wh, bgfg=None, base_color=None, meth_name="draw"):
         g = self.G(wh, bgfg)
         self.init_tile(ctx, g, base_color=base_color)
         getattr(self, meth_name)(ctx, g)
-
 
 
 def tile_value(tile):
@@ -111,7 +113,7 @@ def value_chart(tiles, inverted=False):
 def show_tiles(
     tiles,
     size=100,
-    frac=.6,
+    frac=0.6,
     width=950,
     with_value=False,
     with_name=False,
@@ -178,25 +180,25 @@ def show_overlap(tile):
     bgfg = [color(1), color(0)]
     with cairo_context(W, W) as ctx:
         ctx.rectangle(0, 0, W, W)
-        ctx.set_source_rgb(.75, .75, .75)
+        ctx.set_source_rgb(0.75, 0.75, 0.75)
         ctx.fill()
         ctx.save()
-        ctx.translate(W/4, W/4)
-        tile.draw(ctx, W/2, bgfg)
+        ctx.translate(W / 4, W / 4)
+        tile.draw(ctx, W / 2, bgfg)
         ctx.restore()
         offset = 0
-        bgfg = [color((0, 0, .7)), color((1, .5, .5))]
+        bgfg = [color((0, 0, 0.7)), color((1, 0.5, 0.5))]
         for x, y in range2d(2, 2):
             ctx.save()
-            ctx.translate(W/4 + x * W/4 + offset, W/4 + y * W/4 + offset)
-            tile.draw(ctx, W/4, bgfg)
+            ctx.translate(W / 4 + x * W / 4 + offset, W / 4 + y * W / 4 + offset)
+            tile.draw(ctx, W / 4, bgfg)
             ctx.restore()
     return ctx
 
 
 def multiscale_truchet(
     tiles=None,
-    tile_chooser=None,
+    tile_chooser: Callable | None = None,
     width=400,
     height=200,
     tilew=40,
@@ -214,19 +216,25 @@ def multiscale_truchet(
 
     rand = random.Random(seed)
 
-    if isinstance(tiles, (list, tuple)):
-        assert tile_chooser is None
-        tile_chooser = lambda ux, uy, uw, ilevel: rand.choice(tiles)
+    if isinstance(tiles, (list, tuple)) and tile_chooser is None:
+
+        def tile_chooser(ux, uy, uw, ilevel):
+            return rand.choice(tiles)
 
     if isinstance(chance, float):
         _chance = chance
-        chance = lambda *a, **k: _chance
+
+        def chance(*a, **k):
+            return _chance
 
     if should_split is None:
-        should_split = lambda x, y, size, ilayer: rand.random() <= chance(x, y, size, ilayer)
 
-    def one_tile(x, y, size, ilayer):
-        tile = tile_chooser(x / width, y / width, size / width, ilayer)
+        def should_split(x, y, size, ilayer):
+            return rand.random() <= chance(x, y, size, ilayer)
+
+    def one_tile(x, y, size, ilayer, ctx: _CairoContext):
+        if tile_chooser is not None:
+            tile: TileBase = tile_chooser(x / width, y / width, size / width, ilayer)
         with ctx.save_restore():
             ctx.translate(x, y)
             tile.draw_tile(ctx, size, bgfg)
@@ -240,21 +248,21 @@ def multiscale_truchet(
         wextra = 1 if (width % tilew) else 0
         hextra = 1 if (height % tilew) else 0
         for ox, oy in range2d(int(width / tilew) + wextra, int(height / tilew) + hextra):
-            one_tile(ox * tilew, oy * tilew, tilew, 0)
+            one_tile(ox * tilew, oy * tilew, tilew, 0, ctx)
 
         for ilayer in range(nlayers - 1):
             last_boxes = boxes
             bgfg = bgfg[::-1]
             boxes = []
             for bx, by, bsize in last_boxes:
-                if should_split((bx + bsize/2)/ width, (by + bsize/2) / height, bsize / width, ilayer):
+                if should_split((bx + bsize / 2) / width, (by + bsize / 2) / height, bsize / width, ilayer):
                     nbsize = bsize / 2
                     for dx, dy in range2d(2, 2):
                         nbx, nby = bx + dx * nbsize, by + dy * nbsize
-                        one_tile(nbx, nby, nbsize, ilayer+1)
+                        one_tile(nbx, nby, nbsize, ilayer + 1, ctx)
 
         if grid:
-            ctx.set_line_width(.5)
+            ctx.set_line_width(0.5)
             ctx.set_source_rgb(1, 0, 0)
             for x, y, size in all_boxes:
                 ctx.rectangle(x, y, size, size)
@@ -314,16 +322,16 @@ def image_truchet(
     lmax = 1 - scale * (1 - lmax)
     imin *= scale
     imax = 1 - scale * (1 - imax)
-    image = image - imin    # make a copy of the image
-    image /= (imax - imin)
-    image *= (lmax - lmin)
+    image = image - imin  # make a copy of the image
+    image /= imax - imin
+    image *= lmax - lmin
     image += lmin
 
     def tile_chooser(ux, uy, us, ilayer):
         ix = int(ux * image.shape[0])
         iy = int(uy * image.shape[1])
         isize = int(us * image.shape[0])
-        color = np.mean(image[iy:iy+isize, ix:ix+isize])
+        color = np.mean(image[iy : iy + isize, ix : ix + isize])
         if jitter:
             color += rand.random() * jitter * 2 - jitter
         close_color = closest(color, levelss[ilayer % 2])
@@ -331,7 +339,7 @@ def image_truchet(
         return rand.choice(tiles)
 
     def should_split(ux, uy, us, _):
-        nsplit = 2 ** split_test
+        nsplit = 2**split_test
         ix = int(ux * image.shape[0])
         iy = int(uy * image.shape[1])
         isize = int(us * image.shape[0] / nsplit)
@@ -402,7 +410,7 @@ def image_truchet4(
         return best_tile
 
     def should_split(ux, uy, us, _):
-        nsplit = 2 ** split_test
+        nsplit = 2**split_test
         ix = int(ux * image.shape[0])
         iy = int(uy * image.shape[1])
         isize = int(us * image.shape[0] / nsplit)

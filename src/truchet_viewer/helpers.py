@@ -21,7 +21,7 @@ def array_slices_2d(arr, x0, y0, nx, dx=None, ny=None, dy=None):
     for ix, iy in range2d(nx, ny):
         x = x0 + ix * dx
         y = y0 + iy * dy
-        yield arr[y:y+dy, x:x+dx]
+        yield arr[y : y + dy, x : x + dx]
 
 
 def color(val):
@@ -40,7 +40,7 @@ def color(val):
 
 
 def make_bgfg(hs, ls, ss):
-    hslsss = [[v,v] if isinstance(v, (int, float)) else v for v in [hs, ls, ss]]
+    hslsss = [[v, v] if isinstance(v, (int, float)) else v for v in [hs, ls, ss]]
     return dict(zip(["bg", "fg"], [colorsys.hls_to_rgb(*hls) for hls in zip(*hslsss)]))
 
 
@@ -57,9 +57,11 @@ def ffffx(start, f):
         to_call = next_to_call
     return allfx
 
+
 def all_subclasses(cls):
     """Return a set of all subclasses of `cls`, including subclasses of subclasses."""
     return ffffx(cls, lambda c: c.__subclasses__())
+
 
 def closest(x, values):
     return min(values, key=lambda v: abs(v - x))

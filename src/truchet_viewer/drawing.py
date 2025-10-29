@@ -18,6 +18,8 @@ CE, CS, CW, CN = [i * DEG90 for i in range(4)]
 class _CairoContext:
     """Base class for Cairo contexts that can display in Jupyter, or write to a file."""
 
+    ctx: cairo.Context
+
     def __init__(self, width: int, height: int, output: str | None = None):
         self.width = width
         self.height = height
@@ -26,7 +28,6 @@ class _CairoContext:
         else:
             self.output = output
         self.surface = None
-        self.ctx = None
 
     def _repr_pretty_(self, p, cycle_unused):
         """Plain text repr for the context."""
@@ -133,9 +134,7 @@ class _CairoPng(_CairoContext):
             return self.pngio.getvalue()
 
 
-def cairo_context(
-    width: int, height: int, format: str = "svg", output: str | None = None
-):
+def cairo_context(width: int, height: int, format: str = "svg", output: str | None = None) -> _CairoPng | _CairoSvg:
     """
     Create a PyCairo context for use in Jupyter.
 
