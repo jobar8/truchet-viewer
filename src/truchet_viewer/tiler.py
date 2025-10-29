@@ -63,7 +63,7 @@ class TileBase:
 def tile_value(tile):
     """The gray value of a tile from 0 (black) to 1 (white)."""
     pic = multiscale_truchet(tiles=[tile], width=10, height=10, tilew=10, nlayers=1, format='png')
-    a = np.array(Image.open(pic.pngio).convert('L'))
+    a = np.array(Image.open(pic.pngio).convert('L'))  # type: ignore
     value = np.sum(a) / a.size / 255
     return value
 
@@ -73,7 +73,7 @@ def tile_value4(tile):
     pw = 10
     pw2 = pw // 2
     pic = multiscale_truchet(tiles=[tile], width=pw, height=pw, tilew=pw, nlayers=1, format='png')
-    a = np.array(Image.open(pic.pngio).convert('L'))
+    a = np.array(Image.open(pic.pngio).convert('L'))  # type: ignore
     values = []
     for a4 in array_slices_2d(a, 0, 0, nx=2, dx=pw2):
         values.append(np.sum(a4) / a4.size / 255)
@@ -129,14 +129,14 @@ def show_tiles(
     if sort:
         tiles = sorted(tiles, key=lambda t: t.__class__.__name__)
         if with_value:
-            tiles = sorted(tiles, key=values.get)
+            tiles = sorted(tiles, key=values.get)  # type: ignore
     wh = size * frac
     gap = size / 10
     per_row = (width + gap) // (size + gap)
     nrows = len(tiles) // per_row + (1 if len(tiles) % per_row else 0)
     ncols = per_row if nrows > 1 else len(tiles)
-    totalW = (size + gap) * ncols - gap
-    totalH = (size + gap) * nrows - gap
+    totalW = int((size + gap) * ncols - gap)
+    totalH = int((size + gap) * nrows - gap)
     with cairo_context(totalW, totalH) as ctx:
         ctx.select_font_face('Sans')
         ctx.set_font_size(10)
@@ -198,15 +198,15 @@ def show_overlap(tile):
 
 def multiscale_truchet(
     tiles=None,
-    tile_chooser: Callable | None = None,
+    tile_chooser: Callable | None = None,  # type: ignore
     width=400,
     height=200,
     tilew=40,
     nlayers=2,
-    chance=0.5,
-    should_split=None,
-    bg=1,
-    fg=0,
+    chance: Callable | float = 0.5,  # type: ignore
+    should_split: Callable | None = None,  # type: ignore
+    bg: tuple[int, float] | tuple[float, float, float] | float = 1.0,
+    fg: tuple[int, float] | tuple[float, float, float] | float = 0.0,
     seed=None,
     format='svg',
     output=None,
