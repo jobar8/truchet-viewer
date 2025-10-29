@@ -9,9 +9,7 @@ description = "A Python library for generating multi-scale Truchet tile patterns
 readme = "README.md"
 requires-python = ">=3.12"
 license = { file = "LICENSE.txt" }
-authors = [
-    { name = "jobar8" }
-]
+authors = [{ name = "jobar8" }]
 keywords = ["truchet", "tiles", "graphics", "cairo", "generative-art"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -33,11 +31,8 @@ dependencies = [
     "tqdm>=4.67.1",
 ]
 
-[project.optional-dependencies]
-dev = [
-    "ruff>=0.1.0",
-    "pytest>=7.0.0",
-]
+[dependency-groups]
+dev = ["ruff>=0.1.0", "pytest>=7.0.0"]
 
 [project.urls]
 Homepage = "https://github.com/jobar8/truchet-viewer"
@@ -49,3 +44,7 @@ packages = ["src/truchet_viewer"]
 [tool.ruff]
 line-length = 120
 target-version = "py312"
+
+[tool.ruff.format]
+# Prefer single quotes over double quotes.
+quote-style = "single"

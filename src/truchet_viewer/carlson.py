@@ -29,8 +29,7 @@ class CarlsonTile(TileBase):
         ctx.rotate(DEG90 * self.rot)
         ctx.translate(-g.wh2, -g.wh2)
 
-    def draw(self, ctx, wh: int):
-        ...
+    def draw(self, ctx, wh: int): ...
 
 
 class CarlsonSlash(CarlsonTile):
@@ -133,7 +132,7 @@ class CarlsonT(CarlsonTile):
 carlson_demo = (
     CarlsonSlash(),
     CarlsonMinus(),
-    #CarlsonHalfMinus(),
+    # CarlsonHalfMinus(),
     CarlsonFour(),
     CarlsonX(),
     CarlsonPlus(),

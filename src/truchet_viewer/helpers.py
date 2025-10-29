@@ -34,14 +34,14 @@ def color(val):
         else:
             return tuple(val)
     elif isinstance(val, str):
-        if val[0] == "#":
+        if val[0] == '#':
             val = tuple(int(val[i : i + 2], 16) / 255 for i in [1, 3, 5])
             return (*val, 1)
 
 
 def make_bgfg(hs, ls, ss):
     hslsss = [[v, v] if isinstance(v, (int, float)) else v for v in [hs, ls, ss]]
-    return dict(zip(["bg", "fg"], [colorsys.hls_to_rgb(*hls) for hls in zip(*hslsss)]))
+    return dict(zip(['bg', 'fg'], [colorsys.hls_to_rgb(*hls) for hls in zip(*hslsss)]))
 
 
 def ffffx(start, f):

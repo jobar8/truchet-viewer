@@ -54,7 +54,7 @@ class TileBase:
 
     def init_tile(self, ctx, g, base_color=None): ...
 
-    def draw_tile(self, ctx, wh, bgfg=None, base_color=None, meth_name="draw"):
+    def draw_tile(self, ctx, wh, bgfg=None, base_color=None, meth_name='draw'):
         g = self.G(wh, bgfg)
         self.init_tile(ctx, g, base_color=base_color)
         getattr(self, meth_name)(ctx, g)
@@ -62,8 +62,8 @@ class TileBase:
 
 def tile_value(tile):
     """The gray value of a tile from 0 (black) to 1 (white)."""
-    pic = multiscale_truchet(tiles=[tile], width=10, height=10, tilew=10, nlayers=1, format="png")
-    a = np.array(Image.open(pic.pngio).convert("L"))
+    pic = multiscale_truchet(tiles=[tile], width=10, height=10, tilew=10, nlayers=1, format='png')
+    a = np.array(Image.open(pic.pngio).convert('L'))
     value = np.sum(a) / a.size / 255
     return value
 
@@ -72,8 +72,8 @@ def tile_value4(tile):
     """The four-quadrant gray values (0->1) of a tile."""
     pw = 10
     pw2 = pw // 2
-    pic = multiscale_truchet(tiles=[tile], width=pw, height=pw, tilew=pw, nlayers=1, format="png")
-    a = np.array(Image.open(pic.pngio).convert("L"))
+    pic = multiscale_truchet(tiles=[tile], width=pw, height=pw, tilew=pw, nlayers=1, format='png')
+    a = np.array(Image.open(pic.pngio).convert('L'))
     values = []
     for a4 in array_slices_2d(a, 0, 0, nx=2, dx=pw2):
         values.append(np.sum(a4) / a4.size / 255)
@@ -125,7 +125,7 @@ def show_tiles(
         classes = {tile.__class__ for tile in tiles}
         tiles = [cls() for cls in classes]
     if with_value:
-        values = {t: f"{tile_value(t):.3f}" for t in tiles}
+        values = {t: f'{tile_value(t):.3f}' for t in tiles}
     if sort:
         tiles = sorted(tiles, key=lambda t: t.__class__.__name__)
         if with_value:
@@ -138,7 +138,7 @@ def show_tiles(
     totalW = (size + gap) * ncols - gap
     totalH = (size + gap) * nrows - gap
     with cairo_context(totalW, totalH) as ctx:
-        ctx.select_font_face("Sans")
+        ctx.select_font_face('Sans')
         ctx.set_font_size(10)
         for i, tile in enumerate(tiles):
             r, c = divmod(i, per_row)
@@ -208,7 +208,7 @@ def multiscale_truchet(
     bg=1,
     fg=0,
     seed=None,
-    format="svg",
+    format='svg',
     output=None,
     grid=False,
 ):
@@ -286,7 +286,7 @@ def image_truchet(
     height=400,
     tilew=40,
     nlayers=1,
-    format="svg",
+    format='svg',
     output=None,
     grid=False,
     seed=None,
@@ -298,7 +298,7 @@ def image_truchet(
     rand = random.Random(seed)
 
     if isinstance(image, str):
-        image = np.array(Image.open(image).convert("L"))
+        image = np.array(Image.open(image).convert('L'))
 
     tile_valuess = []
     levelss = []
@@ -372,14 +372,14 @@ def image_truchet4(
     height=400,
     tilew=40,
     nlayers=1,
-    format="svg",
+    format='svg',
     output=None,
     grid=False,
     split_thresh=50,
     split_test=2,
 ):
     if isinstance(image, str):
-        image = np.array(Image.open(image).convert("L"))
+        image = np.array(Image.open(image).convert('L'))
 
     tile_valuess = []
     for half in [0, 1]:

@@ -2,7 +2,7 @@ from truchet_viewer.helpers import make_bgfg
 from truchet_viewer.n6 import n6_circles
 from truchet_viewer.tiler import multiscale_truchet
 
-DIR = "~/wallpaper/tru6/1680"
+DIR = '~/wallpaper/tru6/1680'
 NIMG = 30
 for i in range(NIMG):
     multiscale_truchet(
@@ -14,11 +14,11 @@ for i in range(NIMG):
         chance=0.4,
         seed=i,
         **make_bgfg(i / NIMG, (0.55, 0.45), 0.45),
-        format="png",
-        output=f"{DIR}/bg_{i:02d}.png",
+        format='png',
+        output=f'{DIR}/bg_{i:02d}.png',
     )
 
-DIR = "~/wallpaper/tru6/1920"
+DIR = '~/wallpaper/tru6/1920'
 NIMG = 15
 for i in range(NIMG):
     multiscale_truchet(
@@ -30,11 +30,11 @@ for i in range(NIMG):
         chance=0.4,
         seed=i,
         **make_bgfg(i / NIMG, (0.55, 0.45), 0.45),
-        format="png",
-        output=f"{DIR}/bg_{i:02d}.png",
+        format='png',
+        output=f'{DIR}/bg_{i:02d}.png',
     )
 
-DIR = "~/wallpaper/tru6/2872"
+DIR = '~/wallpaper/tru6/2872'
 for i in range(NIMG):
     multiscale_truchet(
         tiles=n6_circles,
@@ -43,14 +43,14 @@ for i in range(NIMG):
         tilew=300,
         nlayers=3,
         chance=0.4,
-        bg="#335495",
-        fg="#243b6a",
+        bg='#335495',
+        fg='#243b6a',
         seed=i,
-        format="png",
-        output=f"{DIR}/bg_{i:02d}.png",
+        format='png',
+        output=f'{DIR}/bg_{i:02d}.png',
     )
 
-DIR = "~/wallpaper/tru6/1536"
+DIR = '~/wallpaper/tru6/1536'
 for i in range(NIMG):
     multiscale_truchet(
         tiles=n6_circles,
@@ -59,14 +59,14 @@ for i in range(NIMG):
         tilew=200,
         nlayers=3,
         chance=0.4,
-        bg="#335495",
-        fg="#243b6a",
+        bg='#335495',
+        fg='#243b6a',
         seed=i * 3,
-        format="png",
-        output=f"{DIR}/bg_{i:02d}.png",
+        format='png',
+        output=f'{DIR}/bg_{i:02d}.png',
     )
 
-DIR = "~/wallpaper/tru6/1360"
+DIR = '~/wallpaper/tru6/1360'
 NIMG = 120
 for i in range(NIMG):
     multiscale_truchet(
@@ -78,12 +78,12 @@ for i in range(NIMG):
         chance=0.4,
         seed=i * 10,
         **make_bgfg(i / NIMG, (0.55, 0.45), 0.45),
-        format="png",
-        output=f"{DIR}/bg_{i:03d}.png",
+        format='png',
+        output=f'{DIR}/bg_{i:03d}.png',
     )
 
 # Dell 34" curved monitor
-DIR = "~/wallpaper/tru6/2560"
+DIR = '~/wallpaper/tru6/2560'
 NIMG = 120
 for i in range(NIMG):
     multiscale_truchet(
@@ -95,6 +95,6 @@ for i in range(NIMG):
         chance=0.4,
         seed=i * 10,
         **make_bgfg(i / NIMG, (0.55, 0.45), 0.45),
-        format="png",
-        output=f"{DIR}/bg_{i:03d}.png",
+        format='png',
+        output=f'{DIR}/bg_{i:03d}.png',
     )

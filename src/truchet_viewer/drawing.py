@@ -34,7 +34,7 @@ class _CairoContext:
         # This is implemented just to limit needless changes in notebook files.
         # This gets written to the .ipynb file, and the default includes the
         # memory address, which changes each time.  This string does not.
-        p.text(f"<{self.__class__.__module__}.{self.__class__.__name__}>")
+        p.text(f'<{self.__class__.__module__}.{self.__class__.__name__}>')
 
     def _repr_html_(self):
         """
@@ -45,7 +45,7 @@ class _CairoContext:
         method to display the output in Jupyter.
         """
         if self.output is not None:
-            return f"<b><i>Wrote to {self.output}</i></b>"
+            return f'<b><i>Wrote to {self.output}</i></b>'
 
     def __enter__(self):
         return self
@@ -104,7 +104,7 @@ class _CairoSvg(_CairoContext):
     def __exit__(self, typ, val, tb):
         self.surface.finish()
         if self.output is not None:
-            with open(self.output, "wb") as svgout:
+            with open(self.output, 'wb') as svgout:
                 svgout.write(self.svgio.getvalue())
 
     def _repr_svg_(self):
@@ -134,7 +134,7 @@ class _CairoPng(_CairoContext):
             return self.pngio.getvalue()
 
 
-def cairo_context(width: int, height: int, format: str = "svg", output: str | None = None) -> _CairoPng | _CairoSvg:
+def cairo_context(width: int, height: int, format: str = 'svg', output: str | None = None) -> _CairoPng | _CairoSvg:
     """
     Create a PyCairo context for use in Jupyter.
 
@@ -148,15 +148,15 @@ def cairo_context(width: int, height: int, format: str = "svg", output: str | No
         A PyCairo context proxy.
     """
 
-    if format == "svg":
+    if format == 'svg':
         cls = _CairoSvg
-    elif format == "png":
+    elif format == 'png':
         cls = _CairoPng
     else:
-        raise ValueError(f"Unknown format: {format!r}")
+        raise ValueError(f'Unknown format: {format!r}')
     return cls(width, height, output)
 
 
 def svg_row(*svgs):
     sbs = '<div style="display:flex; flex-direction: row; justify-content: space-evenly">{}</div>'
-    return IPython.display.HTML(sbs.format("".join(s._repr_svg_() for s in svgs)))
+    return IPython.display.HTML(sbs.format(''.join(s._repr_svg_() for s in svgs)))
