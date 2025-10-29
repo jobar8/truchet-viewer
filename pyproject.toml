@@ -42,5 +42,9 @@ Repository = "https://github.com/jobar8/truchet-viewer.git"
 packages = ["src/truchet_viewer"]
 
 [tool.ruff]
-line-length = 88
+line-length = 120
 target-version = "py312"
+
+[tool.ruff.format]
+# Prefer single quotes over double quotes.
+quote-style = "single"

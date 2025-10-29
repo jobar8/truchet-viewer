@@ -844,13 +844,11 @@ class SlashTriangle(Tile):
 n6_strokes = []
 for meth_name in dir(Tile):
     meth = getattr(Tile, meth_name, None)
-    if getattr(meth, "is_stroke", False):
+    if getattr(meth, 'is_stroke', False):
 
         class _OneStroke(Tile):
             def draw_tile(self, ctx, wh, meth_name=meth_name):
-                super().draw_tile(
-                    ctx, wh, base_color=(1, 0.65, 0.65), meth_name=meth_name
-                )
+                super().draw_tile(ctx, wh, base_color=(1, 0.65, 0.65), meth_name=meth_name)
 
         cls = type(meth_name, (_OneStroke,), {})
         n6_strokes.append(cls())
