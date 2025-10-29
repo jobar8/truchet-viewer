@@ -205,8 +205,8 @@ def multiscale_truchet(
     nlayers=2,
     chance: Callable | float = 0.5,  # type: ignore
     should_split: Callable | None = None,  # type: ignore
-    bg: tuple[int, float] | tuple[float, float, float] | float = 1.0,
-    fg: tuple[int, float] | tuple[float, float, float] | float = 0.0,
+    bg: tuple[int, float] | tuple[float, float, float] | float | str = 1.0,
+    fg: tuple[int, float] | tuple[float, float, float] | float | str = 0.0,
     seed=None,
     format='svg',
     output=None,
@@ -275,9 +275,7 @@ def nearest(levels, data):
     """Find the values in a closest to the values in b"""
     data_shape = data.shape
     linear = data.reshape((math.prod(data_shape),))
-    adjusted = levels[
-        np.argmin(np.abs(levels[:, np.newaxis] - linear[np.newaxis, :]), axis=0)
-    ]
+    adjusted = levels[np.argmin(np.abs(levels[:, np.newaxis] - linear[np.newaxis, :]), axis=0)]
     return adjusted.reshape(data_shape)
 
 
