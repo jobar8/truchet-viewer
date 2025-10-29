@@ -228,6 +228,9 @@ def multiscale_truchet(
             return _chance
 
     if should_split is None:
+        should_split = lambda x, y, size, ilayer: rand.random() <= chance(
+            x, y, size, ilayer
+        )
 
         def should_split(x, y, size, ilayer):
             return rand.random() <= chance(x, y, size, ilayer)
@@ -275,7 +278,9 @@ def nearest(levels, data):
     """Find the values in a closest to the values in b"""
     data_shape = data.shape
     linear = data.reshape((math.prod(data_shape),))
-    adjusted = levels[np.argmin(np.abs(levels[:, np.newaxis] - linear[np.newaxis, :]), axis=0)]
+    adjusted = levels[
+        np.argmin(np.abs(levels[:, np.newaxis] - linear[np.newaxis, :]), axis=0)
+    ]
     return adjusted.reshape(data_shape)
 
 
