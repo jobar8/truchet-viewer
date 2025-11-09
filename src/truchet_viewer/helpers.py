@@ -14,10 +14,11 @@ def array_slices_2d(arr, x0, y0, nx, dx=None, ny=None, dy=None):
 
     The slices start at x0,y0.  There are nx across, ny (defaulting to nx) down.
     The slices are dx across, dy (defaulting to dx) down.
-
     """
     ny = ny or nx
     dy = dy or dx
+    if dx is None or dy is None:
+        raise ValueError('dx and dy must be specified, either directly or via nx/ny')
     for ix, iy in range2d(nx, ny):
         x = x0 + ix * dx
         y = y0 + iy * dy

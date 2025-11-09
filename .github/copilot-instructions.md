@@ -7,7 +7,6 @@ Purpose: help an AI agent be immediately productive editing or extending this sm
     - `src/truchet_viewer/n6.py` — defines many concrete `Tile` subclasses (geometry + draw routines) and collects them into lists like `n6_tiles`, `n6_circles`, `n6_lattice`, etc.
     - `src/truchet_viewer/drawing.py` — thin Cairo context helpers (`cairo_context`, context managers, compass constants) used across the codebase.
     - `src/truchet_viewer/helpers.py`, `src/truchet_viewer/image_helpers.py` — small utility helpers (color conversion, slicing, downsampling) that `tiler.py` relies on.
-    - `src/truchet_viewer/main.py` — trivial CLI entrypoint (prints a message).
 
   - The system composes tile classes (in `n6.py`) which subclass `TileBase` (in `tiler.py`). A tile instance's `draw_tile`/`draw` methods build Cairo paths into the provided `ctx`.
   - `multiscale_truchet` (in `tiler.py`) drives layout: it creates a `cairo_context`, iterates a grid of tiles at base size, then repeatedly optionally splits boxes to smaller tiles; `tile_chooser` decides which tile to draw.
