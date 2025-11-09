@@ -8,7 +8,7 @@ DIR = Path('~/wallpaper/tru6/1680').expanduser()
 DIR.mkdir(parents=True, exist_ok=True)
 NIMG = 30
 for i in range(NIMG):
-    print(f'Generating image {i+1} of {NIMG}')
+    print(f'Generating image {i + 1} of {NIMG}')
     print(f'Output: {DIR}/bg_{i:02d}.png')
     multiscale_truchet(
         tiles=n6_circles,
@@ -21,13 +21,16 @@ for i in range(NIMG):
         **make_bgfg(i / NIMG, (0.55, 0.45), 0.45),
         format='png',
         output=f'{DIR}/bg_{i:02d}.png',
+        tile_chooser=None,
+        grid=False,
+        should_split=None,
     )
 
 DIR = Path('~/wallpaper/tru6/1920').expanduser()
 DIR.mkdir(parents=True, exist_ok=True)
 NIMG = 15
 for i in range(NIMG):
-    print(f'Generating image {i+1} of {NIMG}')
+    print(f'Generating image {i + 1} of {NIMG}')
     print(f'Output: {DIR}/bg_{i:02d}.png')
     multiscale_truchet(
         tiles=n6_circles,
@@ -40,12 +43,15 @@ for i in range(NIMG):
         **make_bgfg(i / NIMG, (0.55, 0.45), 0.45),
         format='png',
         output=f'{DIR}/bg_{i:02d}.png',
+        tile_chooser=None,
+        grid=False,
+        should_split=None,
     )
 
 DIR = Path('~/wallpaper/tru6/2872').expanduser()
 DIR.mkdir(parents=True, exist_ok=True)
 for i in range(NIMG):
-    print(f'Generating image {i+1} of {NIMG}')
+    print(f'Generating image {i + 1} of {NIMG}')
     print(f'Output: {DIR}/bg_{i:02d}.png')
     multiscale_truchet(
         tiles=n6_circles,
@@ -64,7 +70,7 @@ for i in range(NIMG):
 DIR = Path('~/wallpaper/tru6/1536').expanduser()
 DIR.mkdir(parents=True, exist_ok=True)
 for i in range(NIMG):
-    print(f'Generating image {i+1} of {NIMG}')
+    print(f'Generating image {i + 1} of {NIMG}')
     print(f'Output: {DIR}/bg_{i:02d}.png')
     multiscale_truchet(
         tiles=n6_circles,
@@ -84,17 +90,20 @@ DIR = Path('~/wallpaper/tru6/2560').expanduser()
 DIR.mkdir(parents=True, exist_ok=True)
 NIMG = 60
 for i in range(NIMG):
-    print(f'Generating image {i+1} of {NIMG}')
+    print(f'Generating image {i + 1} of {NIMG}')
     print(f'Output: {DIR}/bg_{i:02d}.png')
     multiscale_truchet(
         tiles=n6_circles,
+        tile_chooser=None,
         width=2560,
         height=1440,
         tilew=150,
         nlayers=3,
         chance=0.4,
         seed=i * 10,
+        should_split=None,
         **make_bgfg(i / NIMG, (0.55, 0.45), 0.45),
         format='png',
         output=f'{DIR}/bg_{i:03d}.png',
+        grid=False,
     )
