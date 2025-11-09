@@ -14,14 +14,14 @@ st.title('Truchet Pattern Generator')
 
 # Create dictionary mapping tile set names to actual tile lists
 TILE_SETS = {
-    'n6_tiles': n6_tiles,
-    'n6_circles': n6_circles,
-    'n6_connected': n6_connected,
-    'n6_filled': n6_filled,
-    'n6_lattice': n6_lattice,
-    'n6_strokes': n6_strokes,
-    'n6_weird': n6_weird,
-    'carlson_tiles': carlson_tiles,
+    'all tiles': n6_tiles,
+    'circles': n6_circles,
+    'connected': n6_connected,
+    'filled': n6_filled,
+    'lattice': n6_lattice,
+    'strokes': n6_strokes,
+    'weird': n6_weird,
+    'carlson': carlson_tiles,
 }
 
 # Create sidebar for controls
