@@ -58,69 +58,66 @@ with st.sidebar:
     # Add a download button
     download = st.button('Generate for Download')
 
+
 # Main content area
-try:
-    # Generate pattern with current parameters
-    pattern = multiscale_truchet(
-        tiles=TILE_SETS[tile_set],
+@st.cache_data
+def render_truchet_bytes(
+    tile_set_label: str,
+    width: int,
+    height: int,
+    tilew: int,
+    nlayers: int,
+    chance: float,
+    bg: str,
+    fg: str,
+    grid: bool,
+    seed: int,
+):
+    """Render truchet pattern and return PNG bytes. Cached by Streamlit to avoid re-rendering."""
+    tiles = TILE_SETS[tile_set_label]
+    pic = multiscale_truchet(
+        tiles=tiles,
         width=width,
         height=height,
         tilew=tilew,
         nlayers=nlayers,
         chance=chance,
-        bg=bg_color,
-        fg=fg_color,
+        bg=bg,
+        fg=fg,
         grid=grid,
         seed=seed,
-        format='png',  # Force PNG format for consistent display
+        format='png',
+        output=None,
+    )
+    return pic.pngio.getvalue() if getattr(pic, 'pngio', None) is not None else None
+
+
+try:
+    # Get PNG bytes from cache (or render if needed)
+    pattern_bytes = render_truchet_bytes(
+        tile_set, width, height, tilew, nlayers, chance, bg_color, fg_color, grid, seed
     )
 
-    # Display the pattern (use width='content' per request)
-    if pattern.pngio is not None:
-        st.image(pattern.pngio, width='content')
+    # Display the pattern
+    if pattern_bytes is not None:
+        st.image(pattern_bytes, width='content')
 
     # Handle download if requested
     if download:
-        # Use the currently displayed PNG bytes when available to avoid re-rendering.
-        data_bytes = None
-        if getattr(pattern, 'pngio', None) is not None:
-            try:
-                data_bytes = pattern.pngio.getvalue()
-            except Exception:
-                data_bytes = None
+        # sanitize tile_set label for a filename
+        def _sanitize(name: str) -> str:
+            # Replace any sequence of non-alphanumeric, dot, underscore, or dash with underscore
+            s = name.replace(' ', '_')
+            s = re.sub(r'[^A-Za-z0-9._-]+', '_', s)
+            return s.strip(' _').lower() or 'tiles'
 
-        if data_bytes is None:
-            # Fallback: render to memory and use that
-            pattern_mem = multiscale_truchet(
-                tiles=TILE_SETS[tile_set],
-                width=width,
-                height=height,
-                tilew=tilew,
-                nlayers=nlayers,
-                chance=chance,
-                bg=bg_color,
-                fg=fg_color,
-                grid=grid,
-                seed=seed,
-                format='png',
-                output=None,
-            )
-            if getattr(pattern_mem, 'pngio', None) is not None:
-                data_bytes = pattern_mem.pngio.getvalue()
+        safe_label = _sanitize(tile_set)
+        filename = f'truchet_{safe_label}_{seed}_{width}x{height}.png'
 
-        if data_bytes:
-            # sanitize tile_set label for a filename
-            def _sanitize(name: str) -> str:
-                # Replace any sequence of non-alphanumeric, dot, underscore, or dash with underscore
-                s = name.replace(' ', '_')
-                s = re.sub(r"[^A-Za-z0-9._-]+", '_', s)
-                return s.strip(' _').lower() or 'tiles'
-
-            safe_label = _sanitize(tile_set)
-            filename = f'truchet_{safe_label}_{seed}_{width}x{height}.png'
+        if pattern_bytes:
             st.sidebar.download_button(
                 label='Download PNG',
-                data=data_bytes,
+                data=pattern_bytes,
                 file_name=filename,
                 mime='image/png',
                 icon=':material/download:',
