@@ -1,13 +1,16 @@
 # Truchet Viewer
 
-A Python library for generating and exploring multi-scale Truchet tile patterns using PyCairo. This library provides tools for creating complex, visually appealing patterns through both interactive Jupyter notebooks and programmatic API.
+A Python library for generating and exploring multi-scale Truchet tile patterns using [PyCairo](https://pycairo.readthedocs.io/en/latest/)
+and [Streamlit](https://docs.streamlit.io/).
+This library provides tools for creating complex, visually appealing patterns through both interactive Jupyter notebooks and a web-based app.
+
+![Truchet Tile Example](examples/truchet_circles_42_800x800.png)
 
 ## Features
 
 - Generate multi-scale Truchet tile patterns with customizable depth and complexity
 - Rich set of predefined tile patterns including circles, lattices, and filled shapes
-- Image-driven tile generation - create patterns based on input images
-- Interactive exploration through Jupyter notebooks
+- Interactive exploration through Jupyter notebooks and Streamlit app
 - Flexible Cairo-based rendering supporting SVG and PNG output
 
 ## Installation
@@ -64,17 +67,20 @@ multiscale_truchet(
     width=800,
     height=600,
     tilew=100,
-    nlayers=4,
+    nlayers=3,
     chance=0.45
 )
 ```
+
+This will create a multi-scale Truchet pattern using the N6 tile set. It should look something like this:
+
+![Example Truchet Pattern](examples/truchet_example.png)
 
 ## Examples
 
 Check out the example notebooks in the `examples/` directory:
 - `Truchet.ipynb` - Basic usage and pattern generation
 - `N6.ipynb` - Exploring different tile types
-- `Images.ipynb` - Image-driven pattern generation
 
 ## Acknowledgments
 
