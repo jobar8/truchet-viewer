@@ -1,10 +1,12 @@
+""""Streamlit app to generate multiscale Truchet patterns."""
 import streamlit as st
 import re
-
 
 from truchet_viewer import multiscale_truchet
 from truchet_viewer.n6 import n6_tiles, n6_circles, n6_connected, n6_filled, n6_lattice, n6_strokes, n6_weird
 from truchet_viewer.carlson import carlson_tiles
+
+# Copyright Joseph Barraud 2025
 
 # Set page config
 st.set_page_config(page_title='Truchet Pattern Generator', layout='wide')

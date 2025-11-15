@@ -8,6 +8,7 @@ import os.path
 import cairo
 import IPython.display
 
+# Copyright Ned Batchelder 2022
 
 # Compass points for making circle arcs
 DEG90 = math.pi / 2

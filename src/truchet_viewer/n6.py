@@ -1,6 +1,7 @@
 from truchet_viewer.drawing import CE, CS, CW, CN, DEG90, DEG180
 from truchet_viewer.tiler import TileBase, collect, stroke
 
+# Copyright Ned Batchelder 2022
 
 n6_tiles = []
 n6_connected = []

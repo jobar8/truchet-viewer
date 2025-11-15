@@ -12,6 +12,8 @@ from PIL import Image
 from truchet_viewer.drawing import cairo_context, _CairoContext
 from truchet_viewer.helpers import array_slices_2d, color, range2d
 
+# Copyright Ned Batchelder 2022
+
 
 def rotations(cls, num_rots=4):
     return map(cls, range(num_rots))
