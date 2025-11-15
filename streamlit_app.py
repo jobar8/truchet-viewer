@@ -10,7 +10,7 @@ from truchet_viewer.carlson import carlson_tiles
 st.set_page_config(page_title='Truchet Pattern Generator', layout='wide')
 
 # Title
-st.title('Truchet Pattern Generator')
+st.title('Multiscale Truchet Pattern Generator')
 
 # Create dictionary mapping tile set names to actual tile lists
 TILE_SETS = {
