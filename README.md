@@ -108,7 +108,9 @@ multiscale_truchet(
 )
 ```
 
-This will create a multi-scale Truchet pattern using the N6 tile set. It should look something like this:
+This will create a multi-scale Truchet pattern using the N6 tile set. The `nlayers` parameter controls the number of levels.
+
+It should look something like this:
 
 ![Example Truchet Pattern](examples/truchet_example.png)
 
