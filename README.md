@@ -4,7 +4,7 @@ A Python library for generating and exploring multi-scale Truchet tile patterns 
 and [Streamlit](https://docs.streamlit.io/).
 This library provides tools for creating complex, visually appealing patterns through both interactive Jupyter notebooks and a web-based app.
 
-![Truchet Tile Example](examples/truchet_circles_42_800x800.png)
+![Truchet Tile Example](examples/truchet_circles_42_800x600.png)
 
 ## Features
 
