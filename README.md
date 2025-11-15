@@ -71,7 +71,7 @@ source .venv/bin/activate
 Launch Jupyter Notebook and open the example notebooks in the `examples/` directory:
 
 ```bash
-jupyter notebook
+jupyter lab
 ```
 
 ### Using the Streamlit App
