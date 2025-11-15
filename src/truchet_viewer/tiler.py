@@ -1,5 +1,8 @@
-import collections
-import math
+"""Classes and functions for working with Truchet tiles and generating images from them.
+
+Originally based on Ned Batchelder's truchet code: https://github.com/nedbat/truchet
+"""
+
 import random
 from typing import Callable
 
@@ -7,7 +10,9 @@ import numpy as np
 from PIL import Image
 
 from truchet_viewer.drawing import cairo_context, _CairoContext
-from truchet_viewer.helpers import array_slices_2d, color, range2d, closest
+from truchet_viewer.helpers import array_slices_2d, color, range2d
+
+# Copyright Ned Batchelder 2022
 
 
 def rotations(cls, num_rots=4):
@@ -269,168 +274,3 @@ def multiscale_truchet(
                 ctx.stroke()
 
     return ctx
-
-
-def nearest(levels, data):
-    """Find the values in a closest to the values in b"""
-    data_shape = data.shape
-    linear = data.reshape((math.prod(data_shape),))
-    adjusted = levels[np.argmin(np.abs(levels[:, np.newaxis] - linear[np.newaxis, :]), axis=0)]
-    return adjusted.reshape(data_shape)
-
-
-def image_truchet(
-    tiles,
-    image,
-    width=400,
-    height=400,
-    tilew=40,
-    nlayers=1,
-    format='svg',
-    output=None,
-    grid=False,
-    seed=None,
-    scale=0,
-    jitter=0,
-    split_thresh=50,
-    split_test=2,
-):
-    rand = random.Random(seed)
-
-    if isinstance(image, str):
-        image = np.array(Image.open(image).convert('L'))
-
-    tile_valuess = []
-    levelss = []
-    all_levels = []
-    for half in [0, 1]:
-        tile_values = collections.defaultdict(list)
-        for tile in tiles:
-            value = int(tile_value(tile) * 255)
-            if half == 1:
-                value = 256 - value
-            tile_values[value].append(tile)
-        levels = np.array(sorted(tile_values.keys()))
-        tile_valuess.append(tile_values)
-        levelss.append(levels)
-        all_levels.extend(levels)
-
-    lmin, lmax = min(all_levels), max(all_levels)
-    imin, imax = np.min(image), np.max(image)
-    scale = float(scale)
-    lmin *= scale
-    lmax = 1 - scale * (1 - lmax)
-    imin *= scale
-    imax = 1 - scale * (1 - imax)
-    image = image - imin  # make a copy of the image
-    image /= imax - imin
-    image *= lmax - lmin
-    image += lmin
-
-    def tile_chooser(ux, uy, us, ilayer):
-        ix = int(ux * image.shape[0])
-        iy = int(uy * image.shape[1])
-        isize = int(us * image.shape[0])
-        color = np.mean(image[iy : iy + isize, ix : ix + isize])
-        if jitter:
-            color += rand.random() * jitter * 2 - jitter
-        close_color = closest(color, levelss[ilayer % 2])
-        tiles = tile_valuess[ilayer % 2][close_color]
-        return rand.choice(tiles)
-
-    def should_split(ux, uy, us, _):
-        nsplit = 2**split_test
-        ix = int(ux * image.shape[0])
-        iy = int(uy * image.shape[1])
-        isize = int(us * image.shape[0] / nsplit)
-        colors = []
-        for aslice in array_slices_2d(image, ix, iy, nx=nsplit, dx=isize):
-            colors.append(np.mean(aslice))
-        lo = min(colors)
-        hi = max(colors)
-        return (hi - lo) > split_thresh
-
-    return multiscale_truchet(
-        tile_chooser=tile_chooser,
-        should_split=should_split,
-        width=width,
-        height=height,
-        tilew=tilew,
-        nlayers=nlayers,
-        bg=1,
-        fg=0,
-        format=format,
-        output=output,
-        grid=grid,
-    )
-
-
-def image_truchet4(
-    tiles,
-    image,
-    width=400,
-    height=400,
-    tilew=40,
-    nlayers=1,
-    format='svg',
-    output=None,
-    grid=False,
-    split_thresh=50,
-    split_test=2,
-):
-    if isinstance(image, str):
-        image = np.array(Image.open(image).convert('L'))
-
-    tile_valuess = []
-    for half in [0, 1]:
-        tile_values = []
-        for tile in tiles:
-            value4 = tile_value4(tile)
-            if half == 1:
-                value4 = 1 - value4
-            tile_values.append((value4, tile))
-        tile_valuess.append(tile_values)
-
-    def tile_chooser(ux, uy, us, ilayer):
-        ix = int(ux * image.shape[0])
-        iy = int(uy * image.shape[1])
-        isize = int(us * image.shape[0])
-        color4 = []
-        is2 = isize // 2
-        for aslice in array_slices_2d(image, ix, iy, nx=2, dx=is2):
-            color4.append(np.mean(aslice))
-        color4 = np.array(color4) / 255
-        min_close = 999999999
-        best_tile = None
-        for value4, tile in tile_valuess[ilayer % 2]:
-            close = np.sum(np.absolute(color4 - value4))
-            if close < min_close:
-                min_close = close
-                best_tile = tile
-        return best_tile
-
-    def should_split(ux, uy, us, _):
-        nsplit = 2**split_test
-        ix = int(ux * image.shape[0])
-        iy = int(uy * image.shape[1])
-        isize = int(us * image.shape[0] / nsplit)
-        colors = []
-        for aslice in array_slices_2d(image, ix, iy, nx=nsplit, dx=isize):
-            colors.append(np.mean(aslice))
-        lo = min(colors)
-        hi = max(colors)
-        return (hi - lo) > split_thresh
-
-    return multiscale_truchet(
-        tile_chooser=tile_chooser,
-        should_split=should_split,
-        width=width,
-        height=height,
-        tilew=tilew,
-        nlayers=nlayers,
-        bg=1,
-        fg=0,
-        format=format,
-        output=output,
-        grid=grid,
-    )

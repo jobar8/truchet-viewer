@@ -1,6 +1,8 @@
 from truchet_viewer.drawing import CE, CS, CW, CN, DEG90
 from truchet_viewer.tiler import TileBase, rotations
 
+# Copyright Ned Batchelder 2022
+
 
 class CarlsonTile(TileBase):
     """https://christophercarlson.com/portfolio/multi-scale-truchet-patterns/"""

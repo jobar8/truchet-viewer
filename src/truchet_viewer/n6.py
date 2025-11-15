@@ -1,6 +1,7 @@
 from truchet_viewer.drawing import CE, CS, CW, CN, DEG90, DEG180
 from truchet_viewer.tiler import TileBase, collect, stroke
 
+# Copyright Ned Batchelder 2022
 
 n6_tiles = []
 n6_connected = []
@@ -847,8 +848,9 @@ for meth_name in dir(Tile):
     if getattr(meth, 'is_stroke', False):
 
         class _OneStroke(Tile):
-            def draw_tile(self, ctx, wh, meth_name=meth_name):
-                super().draw_tile(ctx, wh, base_color=(1, 0.65, 0.65), meth_name=meth_name)
+            def draw_tile(self, ctx, wh, bgfg=None, meth_name=meth_name):
+                # pass bgfg through to the parent and set a pale base color for strokes
+                super().draw_tile(ctx, wh, bgfg=bgfg, base_color=(1, 0.85, 0.65), meth_name=meth_name)
 
         cls = type(meth_name, (_OneStroke,), {})
         n6_strokes.append(cls())

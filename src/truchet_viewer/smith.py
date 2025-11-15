@@ -4,6 +4,8 @@ import random
 from truchet_viewer.drawing import cairo_context
 from truchet_viewer.helpers import color, range2d
 
+# Copyright Ned Batchelder 2022
+
 PI = math.pi
 PI2 = math.pi / 2
 
