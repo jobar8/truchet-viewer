@@ -1,4 +1,5 @@
-""""Streamlit app to generate multiscale Truchet patterns."""
+"""Streamlit app to generate multiscale Truchet patterns."""
+
 import streamlit as st
 import re
 

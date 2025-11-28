@@ -1,62 +1,38 @@
-import math
+"""Basic Smith tiles."""
+
 import random
 
-from truchet_viewer.drawing import cairo_context
+from truchet_viewer.drawing import cairo_context, DEG90, DEG180
 from truchet_viewer.helpers import color, range2d
 
-# Copyright Ned Batchelder 2022
-
-PI = math.pi
-PI2 = math.pi / 2
-
-eps = 0.5
+from truchet_viewer.tiler import TileBasePlus, collect
 
 
-class SmithTile:
-    def init_tile(self, ctx, wh, bgfg=None):
-        if bgfg is None:
-            bgfg = [color(1), color(0)]
-        eps = 0
-        ctx.rectangle(0 - eps, 0 - eps, wh + eps, wh + eps)
-        ctx.set_source_rgba(*bgfg[0])
-        ctx.fill()
-        ctx.set_source_rgba(*bgfg[1])
-
-    def draw(self, ctx, wh): ...
+smith_tiles = []
 
 
-class SmithLeftTile(SmithTile):
-    def draw(self, ctx, wh, bgfg=None):
-        self.init_tile(ctx, wh, bgfg)
-        wh2 = wh // 2
-        ctx.move_to(0 - eps, wh2)
-        ctx.arc(0 - eps, wh + eps, wh2 + eps, -PI2, 0)
-        ctx.line_to(0 - eps, wh + eps)
+@collect(smith_tiles, repeat=1, rotations=1, flip=True)
+class SmithTile(TileBasePlus):
+    def draw(self, ctx, g, bgfg=None):
+        ctx.move_to(0 - self.eps, g.wh2)
+        ctx.arc(0 - self.eps, g.wh + self.eps, g.wh2 + self.eps, -DEG90, 0)
+        ctx.line_to(0 - self.eps, g.wh + self.eps)
         ctx.close_path()
         ctx.fill()
 
-        ctx.move_to(wh + eps, wh2)
-        ctx.arc(wh + eps, 0 - eps, wh2 + eps, PI2, PI)
-        ctx.line_to(wh + eps, 0 - eps)
+        ctx.move_to(g.wh + self.eps, g.wh2)
+        ctx.arc(g.wh + self.eps, 0 - self.eps, g.wh2 + self.eps, DEG90, DEG180)
+        ctx.line_to(g.wh + self.eps, 0 - self.eps)
         ctx.close_path()
         ctx.fill()
-
-
-class SmithRightTile(SmithLeftTile):
-    def draw(self, ctx, wh, bgfg):
-        wh2 = wh / 2
-        ctx.save()
-        ctx.translate(wh2, wh2)
-        ctx.rotate(PI2)
-        ctx.translate(-wh2, -wh2)
-        super().draw(ctx, wh, bgfg)
-        ctx.restore()
 
 
 def smith(width=400, height=200, tilew=40, grid=False, gap=0, seed=None):
+    """Demonstrate Smith tiles."""
     rand = random.Random(seed)
     with cairo_context(width, height) as ctx:
-        tiles = [SmithLeftTile(), SmithRightTile()]
+        # tiles = [SmithLeftTile(), SmithRightTile()]
+        tiles = smith_tiles
         bgfgs = [
             [color(1), color(0)],
             [color(0), color(1)],
@@ -65,7 +41,7 @@ def smith(width=400, height=200, tilew=40, grid=False, gap=0, seed=None):
             ctx.save()
             ctx.translate(ox * (tilew + gap), oy * (tilew + gap))
             coin = rand.choice([0, 1])
-            tiles[coin].draw(ctx, tilew, bgfgs[(ox + oy + coin) % 2])
+            tiles[coin].draw_tile(ctx, tilew, bgfgs[(ox + oy + coin) % 2], bgfgs[(ox + oy + coin) % 2])
             if grid:
                 ctx.set_line_width(0.1)
                 ctx.rectangle(0, 0, tilew, tilew)
