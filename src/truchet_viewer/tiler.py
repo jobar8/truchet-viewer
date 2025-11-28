@@ -9,17 +9,18 @@ from typing import Callable
 import numpy as np
 from PIL import Image
 
-from truchet_viewer.drawing import cairo_context, _CairoContext
+from truchet_viewer.drawing import cairo_context, _CairoContext, DEG90
 from truchet_viewer.helpers import array_slices_2d, color, range2d
 
 # Copyright Ned Batchelder 2022
+# Copyright Joseph Barraud 2025
 
 
 def rotations(cls, num_rots=4):
     return map(cls, range(num_rots))
 
 
-def collect(tile_list, repeat=1, rotations=None, flip=None):
+def collect(tile_list: list, repeat: int = 1, rotations=None, flip=None):
     def _dec(cls):
         rots = rotations
         if rots is None:
@@ -44,11 +45,12 @@ def stroke(method):
 
 class TileBase:
     class G:
-        def __init__(self, wh, bgfg=None):
-            self.wh = wh
-            self.bgfg = bgfg
-            if self.bgfg is None:
+        def __init__(self, wh, bgfg: list | None = None):
+            self.wh: float = wh
+            if bgfg is None:
                 self.bgfg = [color(1), color(0)]
+            else:
+                self.bgfg = bgfg
 
     rotations = 4
     flip = False
@@ -65,9 +67,38 @@ class TileBase:
         getattr(self, meth_name)(ctx, g)
 
 
+class TileBasePlus(TileBase):
+    """Add rotation and symmetry to base tiles."""
+
+    eps = 0.
+
+    class G(TileBase.G):
+        def __init__(self, wh, bgfg=None):
+            super().__init__(wh, bgfg)
+            self.wh2 = wh / 2
+
+    def init_tile(self, ctx, g: G, base_color=None):
+        if base_color is None:
+            base_color = [color(1), color(0)]
+
+        ctx.rectangle(0 - self.eps, 0 - self.eps, g.wh + self.eps, g.wh + self.eps)
+        ctx.set_source_rgba(*g.bgfg[0])
+        ctx.fill()
+        ctx.set_source_rgba(*g.bgfg[1])
+        ctx.translate(g.wh2, g.wh2)
+        ctx.rotate(DEG90 * self.rot)
+        ctx.translate(-g.wh2, -g.wh2)
+
+        if self.flipped:
+            ctx.translate(g.wh, 0)
+            ctx.scale(-1, 1)
+
+    def draw(self, ctx, wh: int, bgfg=None): ...
+
+
 def tile_value(tile):
     """The gray value of a tile from 0 (black) to 1 (white)."""
-    pic = multiscale_truchet(tiles=[tile], width=10, height=10, tilew=10, nlayers=1, format='png')
+    pic = multiscale_truchet(tiles=[tile], width=100, height=100, tilew=100, nlayers=1, format='png')
     a = np.array(Image.open(pic.pngio).convert('L'))  # type: ignore
     value = np.sum(a) / a.size / 255
     return value
@@ -168,7 +199,7 @@ def show_tiles(
             if with_value:
                 ctx.move_to(2, 10)
                 ctx.set_source_rgba(0, 0, 0, 1)
-                ctx.show_text(values[tile])
+                ctx.show_text(f'r={tile.rot} f={tile.flipped} {values[tile]}')
 
             if with_name:
                 ctx.move_to(2, size - 2)
