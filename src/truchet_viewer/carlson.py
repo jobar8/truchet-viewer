@@ -134,7 +134,7 @@ class CarlsonT(CarlsonTile):
 carlson_demo = (
     CarlsonSlash(),
     CarlsonMinus(),
-    # CarlsonHalfMinus(),
+    CarlsonHalfMinus(),
     CarlsonFour(),
     CarlsonX(),
     CarlsonPlus(),
