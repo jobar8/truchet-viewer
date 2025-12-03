@@ -1,10 +1,10 @@
 """Generate multiscale truchet images using n6_circles tiles."""
 
+from pathlib import Path
+
 from truchet_viewer.helpers import make_bgfg
 from truchet_viewer.n6 import n6_circles
 from truchet_viewer.tiler import multiscale_truchet
-
-from pathlib import Path
 
 # Copyright Joseph Barraud 2025
 # Copyright Ned Batchelder 2022

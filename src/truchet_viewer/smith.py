@@ -2,11 +2,9 @@
 
 import random
 
-from truchet_viewer.drawing import cairo_context, DEG90, DEG180
+from truchet_viewer.drawing import DEG90, DEG180, cairo_context
 from truchet_viewer.helpers import color, range2d
-
 from truchet_viewer.tiler import TileBasePlus, collect
-
 
 smith_tiles = []
 
@@ -27,7 +25,7 @@ class SmithTile(TileBasePlus):
         ctx.fill()
 
 
-def smith(width=400, height=200, tilew=40, grid=False, gap=0, seed=None):
+def smith(width: int = 400, height: int = 200, tilew: int = 40, grid: bool = False, gap: int = 0, seed=None):
     """Demonstrate Smith tiles."""
     rand = random.Random(seed)
     with cairo_context(width, height) as ctx:
