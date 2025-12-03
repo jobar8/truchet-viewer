@@ -7,9 +7,10 @@ import random
 from typing import Callable
 
 import numpy as np
+from cairo import Context
 from PIL import Image
 
-from truchet_viewer.drawing import cairo_context, _CairoContext, DEG90
+from truchet_viewer.drawing import DEG90, _CairoContext, cairo_context
 from truchet_viewer.helpers import array_slices_2d, color, range2d
 
 # Copyright Ned Batchelder 2022
@@ -45,8 +46,8 @@ def stroke(method):
 
 class TileBase:
     class G:
-        def __init__(self, wh, bgfg: list | None = None):
-            self.wh: float = wh
+        def __init__(self, wh: int, bgfg: list | None = None):
+            self.wh: int = wh
             if bgfg is None:
                 self.bgfg = [color(1), color(0)]
             else:
@@ -55,13 +56,13 @@ class TileBase:
     rotations = 4
     flip = False
 
-    def __init__(self, rot=0, flipped=False):
+    def __init__(self, rot: int = 0, flipped: bool = False):
         self.rot = rot
         self.flipped = flipped
 
-    def init_tile(self, ctx, g, base_color=None): ...
+    def init_tile(self, ctx: Context, g: G, base_color=None): ...
 
-    def draw_tile(self, ctx, wh, bgfg=None, base_color=None, meth_name='draw'):
+    def draw_tile(self, ctx: Context, wh: int, bgfg=None, base_color=None, meth_name='draw'):
         g = self.G(wh, bgfg)
         self.init_tile(ctx, g, base_color=base_color)
         getattr(self, meth_name)(ctx, g)
@@ -70,14 +71,14 @@ class TileBase:
 class TileBasePlus(TileBase):
     """Add rotation and symmetry to base tiles."""
 
-    eps = 0.
+    eps = 0.0
 
     class G(TileBase.G):
-        def __init__(self, wh, bgfg=None):
+        def __init__(self, wh: int, bgfg=None):
             super().__init__(wh, bgfg)
             self.wh2 = wh / 2
 
-    def init_tile(self, ctx, g: G, base_color=None):
+    def init_tile(self, ctx: Context, g: G, base_color=None):
         if base_color is None:
             base_color = [color(1), color(0)]
 
