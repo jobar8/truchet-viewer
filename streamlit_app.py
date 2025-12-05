@@ -5,7 +5,7 @@ import re
 import streamlit as st
 
 from truchet_viewer import multiscale_truchet
-from truchet_viewer.carlson import carlson_demo, carlson_tiles
+from truchet_viewer.carlson import carlson_basic, carlson_tiles, carlson_extra
 from truchet_viewer.n6 import n6_circles, n6_connected, n6_filled, n6_lattice, n6_strokes, n6_tiles, n6_weird
 from truchet_viewer.truchet import truchet_tiles
 
@@ -26,8 +26,9 @@ TILE_SETS = {
     'Lattice': n6_lattice,
     'Strokes': n6_strokes,
     'Weird': n6_weird,
+    'Carlson Basic': carlson_basic,
     'Carlson': carlson_tiles,
-    'Carlson Demo': carlson_demo,
+    'Carlson Extra': carlson_extra,
     'Truchet': truchet_tiles,
 }
 

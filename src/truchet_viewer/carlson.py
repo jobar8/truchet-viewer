@@ -134,7 +134,7 @@ class CarlsonT(CarlsonTile):
         ctx.fill()
 
 
-carlson_demo = (
+carlson_basic = (
     CarlsonSlash(),
     CarlsonMinus(),
     CarlsonHalfMinus(),
