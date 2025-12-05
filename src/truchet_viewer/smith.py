@@ -4,14 +4,14 @@ import random
 
 from truchet_viewer.drawing import DEG90, DEG180, cairo_context
 from truchet_viewer.helpers import color, range2d
-from truchet_viewer.tiler import TileBasePlus, collect
+from truchet_viewer.tiler import TileBasePlus, collect, _CairoContext
 
 smith_tiles = []
 
 
 @collect(smith_tiles, repeat=1, rotations=1, flip=True)
 class SmithTile(TileBasePlus):
-    def draw(self, ctx, g, bgfg=None):
+    def draw(self, ctx: _CairoContext, g: TileBasePlus.G, bgfg=None):
         ctx.move_to(0 - self.eps, g.wh2)
         ctx.arc(0 - self.eps, g.wh + self.eps, g.wh2 + self.eps, -DEG90, 0)
         ctx.line_to(0 - self.eps, g.wh + self.eps)
@@ -29,8 +29,7 @@ def smith(width: int = 400, height: int = 200, tilew: int = 40, grid: bool = Fal
     """Demonstrate Smith tiles."""
     rand = random.Random(seed)
     with cairo_context(width, height) as ctx:
-        # tiles = [SmithLeftTile(), SmithRightTile()]
-        tiles = smith_tiles
+        tiles: list[SmithTile] = smith_tiles
         bgfgs = [
             [color(1), color(0)],
             [color(0), color(1)],

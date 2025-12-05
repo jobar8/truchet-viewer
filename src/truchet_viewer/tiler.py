@@ -7,7 +7,6 @@ import random
 from typing import Callable
 
 import numpy as np
-from cairo import Context
 from PIL import Image
 
 from truchet_viewer.drawing import DEG90, _CairoContext, cairo_context
@@ -60,9 +59,9 @@ class TileBase:
         self.rot = rot
         self.flipped = flipped
 
-    def init_tile(self, ctx: Context, g: G, base_color=None): ...
+    def init_tile(self, ctx: _CairoContext, g: G, base_color=None): ...
 
-    def draw_tile(self, ctx: Context, wh: int, bgfg=None, base_color=None, meth_name='draw'):
+    def draw_tile(self, ctx: _CairoContext, wh: int, bgfg=None, base_color=None, meth_name='draw'):
         g = self.G(wh, bgfg)
         self.init_tile(ctx, g, base_color=base_color)
         getattr(self, meth_name)(ctx, g)
@@ -78,7 +77,7 @@ class TileBasePlus(TileBase):
             super().__init__(wh, bgfg)
             self.wh2 = wh / 2
 
-    def init_tile(self, ctx: Context, g: G, base_color=None):
+    def init_tile(self, ctx: _CairoContext, g: G, base_color=None):
         if base_color is None:
             base_color = [color(1), color(0)]
 
