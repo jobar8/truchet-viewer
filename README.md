@@ -41,7 +41,7 @@ brew install cmake pkgconf cairo
 
 ### Installing from PyPI
 
-Not yet available on PyPI. Coming soon!
+The package is available on PyPI and can be installed via pip:
 
 ```bash
 pip install truchet-viewer
