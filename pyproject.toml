@@ -4,21 +4,24 @@ build-backend = "hatchling.build"
 
 [project]
 name = "truchet-viewer"
-version = "0.1.0"
+version = "1.0.0"
 description = "A Python library for generating multi-scale Truchet tile patterns and images using PyCairo"
 readme = "README.md"
 requires-python = ">=3.12"
-license = { file = "LICENSE.txt" }
-authors = [{ name = "jobar8" }]
+license = "MIT AND (Apache-2.0 OR BSD-2-Clause)"
+license-files = ["LICENSE.txt"]
+authors = [{ name = "Joseph Barraud" }]
 keywords = ["truchet", "tiles", "graphics", "cairo", "generative-art"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Topic :: Artistic Software",
     "Topic :: Scientific/Engineering :: Image Processing",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 
 dependencies = [
