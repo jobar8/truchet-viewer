@@ -1,7 +1,10 @@
-from truchet_viewer.drawing import CE, CS, CW, CN, DEG90
+"""Carlson tiles."""
+
+from truchet_viewer.drawing import CE, CN, CS, CW, DEG90, _CairoContext
 from truchet_viewer.tiler import TileBase, rotations
 
 # Copyright Ned Batchelder 2022
+# Copyright Joseph Barraud 2025
 
 
 class CarlsonTile(TileBase):
@@ -18,7 +21,7 @@ class CarlsonTile(TileBase):
             self.wh3 = wh * 2 / 3
             self.wh6 = wh / 6
 
-    def init_tile(self, ctx, g, base_color=None):
+    def init_tile(self, ctx: _CairoContext, g: G, base_color=None):
         ctx.arc(0, 0, g.wh1, CS, CE)
         ctx.arc(g.wh, 0, g.wh1, CW, CS)
         ctx.arc(g.wh, g.wh, g.wh1, CN, CW)
@@ -131,10 +134,10 @@ class CarlsonT(CarlsonTile):
         ctx.fill()
 
 
-carlson_demo = (
+carlson_basic = (
     CarlsonSlash(),
     CarlsonMinus(),
-    # CarlsonHalfMinus(),
+    CarlsonHalfMinus(),
     CarlsonFour(),
     CarlsonX(),
     CarlsonPlus(),

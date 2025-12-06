@@ -1,5 +1,4 @@
 from truchet_viewer.smith import smith, smith_tiles
-
 from truchet_viewer.tiler import show_tiles
 
 

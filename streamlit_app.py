@@ -1,11 +1,14 @@
 """Streamlit app to generate multiscale Truchet patterns."""
 
-import streamlit as st
 import re
 
+import streamlit as st
+
 from truchet_viewer import multiscale_truchet
-from truchet_viewer.n6 import n6_tiles, n6_circles, n6_connected, n6_filled, n6_lattice, n6_strokes, n6_weird
-from truchet_viewer.carlson import carlson_tiles
+from truchet_viewer.carlson import carlson_basic, carlson_extra, carlson_tiles
+from truchet_viewer.helpers import get_random_hex_color
+from truchet_viewer.n6 import n6_circles, n6_connected, n6_filled, n6_lattice, n6_strokes, n6_tiles, n6_weird
+from truchet_viewer.truchet import truchet_tiles
 
 # Copyright Joseph Barraud 2025
 
@@ -17,14 +20,17 @@ st.title('Multiscale Truchet Pattern Generator')
 
 # Create dictionary mapping tile set names to actual tile lists
 TILE_SETS = {
-    'All tiles': n6_tiles,
+    'All N6 tiles': n6_tiles,
     'Circles': n6_circles,
     'Connected': n6_connected,
     'Filled': n6_filled,
     'Lattice': n6_lattice,
     'Strokes': n6_strokes,
     'Weird': n6_weird,
+    'Carlson Basic': carlson_basic,
     'Carlson': carlson_tiles,
+    'Carlson Extra': carlson_extra,
+    'Truchet': truchet_tiles,
 }
 
 # Create sidebar for controls
@@ -47,12 +53,20 @@ with st.sidebar:
 
     # Tile parameters
     nlayers = st.number_input('Layers', min_value=1, max_value=6, value=2)
-    tilew = st.slider('Tile Size', min_value=20, max_value=300, value=100, step=20)
+    tilew = st.slider('Tile Size', min_value=20, max_value=300, value=100, step=10)
     chance = st.slider('Split Chance', min_value=0.0, max_value=1.0, value=0.45, step=0.05)
 
     # Colors
-    bg_color = st.color_picker('Background Color', value='#335495')
-    fg_color = st.color_picker('Foreground Color', value='#243b6a')
+    st.markdown('---')  # Visual separator
+
+    if st.button('Randomize Colors'):
+        st.session_state.bg_color = get_random_hex_color()
+        st.session_state.fg_color = get_random_hex_color()
+
+    bg_color = st.color_picker('Background Color', value='#335495', key='bg_color')
+    fg_color = st.color_picker('Foreground Color', value='#243b6a', key='fg_color')
+
+    st.markdown('---')  # Visual separator
 
     # Additional controls
     seed = st.number_input('Random Seed', value=42)

@@ -2,7 +2,6 @@
 
 from truchet_viewer.tiler import TileBasePlus, collect
 
-
 truchet_tiles = []
 
 

@@ -4,3 +4,6 @@ __pycache__/
 uv.lock
 scratch/
 copilot-instructions.md
+
+# tests outputs
+tests/output

@@ -2,6 +2,7 @@
 
 import colorsys
 import itertools
+import random
 
 
 def range2d(nx, ny):
@@ -25,6 +26,20 @@ def array_slices_2d(arr, x0, y0, nx, dx=None, ny=None, dy=None):
         yield arr[y : y + dy, x : x + dx]
 
 
+def get_random_hex_color():
+    """Generate a random hex color string."""
+    return f'#{random.randint(0, 0xFFFFFF):06x}'
+
+
+def hex_to_rgb(hex_color: str) -> tuple[float, float, float]:
+    """Convert a hex color string to an RGB tuple with values in the range [0, 1]."""
+    hex_color = hex_color.lstrip('#')
+    r = int(hex_color[0:2], 16) / 255.0
+    g = int(hex_color[2:4], 16) / 255.0
+    b = int(hex_color[4:6], 16) / 255.0
+    return (r, g, b)
+
+
 def color(val):
     """Create an RGBA color tuple from a variety of inputs."""
     if isinstance(val, (int, float)):
@@ -36,8 +51,7 @@ def color(val):
             return tuple(val)
     elif isinstance(val, str):
         if val[0] == '#':
-            val = tuple(int(val[i : i + 2], 16) / 255 for i in [1, 3, 5])
-            return (*val, 1)
+            return (*hex_to_rgb(val), 1)
 
 
 def make_bgfg(hs, ls, ss):

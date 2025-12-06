@@ -1,6 +1,5 @@
-from truchet_viewer.truchet import truchet_tiles
-
 from truchet_viewer.tiler import multiscale_truchet, show_tiles
+from truchet_viewer.truchet import truchet_tiles
 
 
 def test_truchet_tiles():
