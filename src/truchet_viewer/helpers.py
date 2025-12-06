@@ -2,6 +2,7 @@
 
 import colorsys
 import itertools
+import random
 
 
 def range2d(nx, ny):
@@ -23,6 +24,11 @@ def array_slices_2d(arr, x0, y0, nx, dx=None, ny=None, dy=None):
         x = x0 + ix * dx
         y = y0 + iy * dy
         yield arr[y : y + dy, x : x + dx]
+
+
+def get_random_hex_color():
+    """Generate a random hex color string."""
+    return f'#{random.randint(0, 0xFFFFFF):06x}'
 
 
 def hex_to_rgb(hex_color: str) -> tuple[float, float, float]:

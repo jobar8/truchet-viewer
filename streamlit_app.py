@@ -5,7 +5,8 @@ import re
 import streamlit as st
 
 from truchet_viewer import multiscale_truchet
-from truchet_viewer.carlson import carlson_basic, carlson_tiles, carlson_extra
+from truchet_viewer.carlson import carlson_basic, carlson_extra, carlson_tiles
+from truchet_viewer.helpers import get_random_hex_color
 from truchet_viewer.n6 import n6_circles, n6_connected, n6_filled, n6_lattice, n6_strokes, n6_tiles, n6_weird
 from truchet_viewer.truchet import truchet_tiles
 
@@ -56,8 +57,16 @@ with st.sidebar:
     chance = st.slider('Split Chance', min_value=0.0, max_value=1.0, value=0.45, step=0.05)
 
     # Colors
-    bg_color = st.color_picker('Background Color', value='#335495')
-    fg_color = st.color_picker('Foreground Color', value='#243b6a')
+    st.markdown('---')  # Visual separator
+
+    if st.button('Randomize Colors'):
+        st.session_state.bg_color = get_random_hex_color()
+        st.session_state.fg_color = get_random_hex_color()
+
+    bg_color = st.color_picker('Background Color', value='#335495', key='bg_color')
+    fg_color = st.color_picker('Foreground Color', value='#243b6a', key='fg_color')
+
+    st.markdown('---')  # Visual separator
 
     # Additional controls
     seed = st.number_input('Random Seed', value=42)

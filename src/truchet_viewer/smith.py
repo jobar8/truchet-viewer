@@ -4,7 +4,7 @@ import random
 
 from truchet_viewer.drawing import DEG90, DEG180, cairo_context
 from truchet_viewer.helpers import color, range2d
-from truchet_viewer.tiler import TileBasePlus, collect, _CairoContext
+from truchet_viewer.tiler import TileBasePlus, _CairoContext, collect
 
 smith_tiles = []
 
