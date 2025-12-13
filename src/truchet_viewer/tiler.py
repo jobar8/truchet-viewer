@@ -10,7 +10,7 @@ import numpy as np
 from PIL import Image
 
 from truchet_viewer.drawing import DEG90, _CairoContext, cairo_context
-from truchet_viewer.helpers import array_slices_2d, color, range2d
+from truchet_viewer.helpers import array_slices_2d, color, range2d, range2d_padded
 
 # Copyright Ned Batchelder 2022
 # Copyright Joseph Barraud 2025
@@ -238,6 +238,7 @@ def multiscale_truchet(
     width=400,
     height=200,
     tilew=40,
+    padding=0,
     nlayers=2,
     chance: Callable | float = 0.5,  # type: ignore
     should_split: Callable | None = None,  # type: ignore
@@ -281,11 +282,24 @@ def multiscale_truchet(
     with cairo_context(width, height, format=format, output=output) as ctx:
         boxes = []
         bgfg = [color(bg), color(fg)]
-        wextra = 1 if (width % tilew) else 0
-        hextra = 1 if (height % tilew) else 0
-        for ox, oy in range2d(int(width / tilew) + wextra, int(height / tilew) + hextra):
-            one_tile(ox * tilew, oy * tilew, tilew, 0, ctx)
 
+        # Fill background
+        ctx.set_source_rgba(*bgfg[0])  # type: ignore
+        ctx.rectangle(0, 0, width, height)
+        ctx.fill()
+
+        # Draw tiles with padding
+        shift = padding * tilew // 2
+        if padding == 0:
+            wextra = 1 if (width % tilew) else 0
+            hextra = 1 if (height % tilew) else 0
+        else:
+            wextra = 0
+            hextra = 0
+        for ox, oy in range2d_padded(int(width / tilew) + wextra, int(height / tilew) + hextra, padding):
+            one_tile(ox * tilew - shift, oy * tilew - shift, tilew, 0, ctx)
+
+        # Draw layers
         for ilayer in range(nlayers - 1):
             last_boxes = boxes
             bgfg = bgfg[::-1]
@@ -297,6 +311,7 @@ def multiscale_truchet(
                         nbx, nby = bx + dx * nbsize, by + dy * nbsize
                         one_tile(nbx, nby, nbsize, ilayer + 1, ctx)
 
+        # Draw grid if requested
         if grid:
             ctx.set_line_width(0.5)
             ctx.set_source_rgb(1, 0, 0)

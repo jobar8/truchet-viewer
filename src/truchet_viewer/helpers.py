@@ -9,6 +9,10 @@ def range2d(nx, ny):
     return itertools.product(range(nx), range(ny))
 
 
+def range2d_padded(nx, ny, pad=1):
+    return itertools.product(range(pad, nx), range(pad, ny))
+
+
 def array_slices_2d(arr, x0, y0, nx, dx=None, ny=None, dy=None):
     """
     Produce slices of the array in a 2d grid.
