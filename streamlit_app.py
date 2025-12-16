@@ -47,12 +47,12 @@ with st.sidebar:
     # Canvas dimensions
     col1, col2 = st.columns(2)
     with col1:
-        width = st.number_input('Width', min_value=200, max_value=2560, value=800, step=100)
+        width = st.number_input('Width', min_value=200, max_value=3000, value=800, step=100)
     with col2:
-        height = st.number_input('Height', min_value=200, max_value=2000, value=800, step=100)
+        height = st.number_input('Height', min_value=200, max_value=3000, value=800, step=100)
 
     # Tile parameters
-    ntiles = st.slider('Number of Tiles', min_value=1, max_value=6, value=4, step=1)
+    ntiles = st.slider('Number of Tiles', min_value=1, max_value=10, value=4, step=1)
     padding = st.number_input('Padding', min_value=0, max_value=3, value=1, step=1)
 
     st.markdown('---')  # Visual separator

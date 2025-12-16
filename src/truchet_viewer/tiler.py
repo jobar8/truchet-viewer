@@ -289,15 +289,18 @@ def multiscale_truchet(
         ctx.fill()
 
         # Draw tiles with padding
-        shift = padding * tilew // 2
         if padding == 0:
-            wextra = 1 if (width % tilew) else 0
-            hextra = 1 if (height % tilew) else 0
+            x_shift = 0
+            y_shift = 0
+            h_extra = 1 if (height % tilew) else 0
         else:
-            wextra = 0
-            hextra = 0
-        for ox, oy in range2d_padded(int(width / tilew) + wextra, int(height / tilew) + hextra, padding):
-            one_tile(ox * tilew - shift, oy * tilew - shift, tilew, 0, ctx)
+            x_ntiles = int(width / tilew) - padding
+            y_ntiles = int(height / tilew) - padding
+            x_shift = (width - x_ntiles * tilew) // 2
+            y_shift = (height - y_ntiles * tilew) // 2
+            h_extra = 0
+        for ox, oy in range2d_padded(int(width / tilew), int(height / tilew) + h_extra, pad=padding):
+            one_tile(ox * tilew + x_shift, oy * tilew + y_shift, tilew, 0, ctx)
 
         # Draw layers
         for ilayer in range(nlayers - 1):

@@ -10,7 +10,7 @@ def range2d(nx, ny):
 
 
 def range2d_padded(nx, ny, pad=1):
-    return itertools.product(range(pad, nx), range(pad, ny))
+    return itertools.product(range(nx-pad), range(ny-pad))
 
 
 def array_slices_2d(arr, x0, y0, nx, dx=None, ny=None, dy=None):
