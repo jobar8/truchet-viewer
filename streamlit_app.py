@@ -47,13 +47,16 @@ with st.sidebar:
     # Canvas dimensions
     col1, col2 = st.columns(2)
     with col1:
-        width = st.number_input('Width', min_value=200, max_value=2560, value=800, step=100)
+        width = st.number_input('Width', min_value=200, max_value=3000, value=800, step=100)
     with col2:
-        height = st.number_input('Height', min_value=200, max_value=2000, value=800, step=100)
+        height = st.number_input('Height', min_value=200, max_value=3000, value=800, step=100)
 
     # Tile parameters
+    ntiles = st.slider('Number of Tiles', min_value=1, max_value=10, value=4, step=1)
+    padding = st.number_input('Padding', min_value=0, max_value=3, value=1, step=1)
+
+    st.markdown('---')  # Visual separator
     nlayers = st.number_input('Layers', min_value=1, max_value=6, value=2)
-    tilew = st.slider('Tile Size', min_value=20, max_value=300, value=100, step=10)
     chance = st.slider('Split Chance', min_value=0.0, max_value=1.0, value=0.45, step=0.05)
 
     # Colors
@@ -63,8 +66,8 @@ with st.sidebar:
         st.session_state.bg_color = get_random_hex_color()
         st.session_state.fg_color = get_random_hex_color()
 
-    bg_color = st.color_picker('Background Color', value='#335495', key='bg_color')
-    fg_color = st.color_picker('Foreground Color', value='#243b6a', key='fg_color')
+    bg_color = st.color_picker('Background Color', value="#000000", key='bg_color')
+    fg_color = st.color_picker('Foreground Color', value="#759ae4", key='fg_color')
 
     st.markdown('---')  # Visual separator
 
@@ -83,6 +86,7 @@ def render_truchet_bytes(
     width: int,
     height: int,
     tilew: int,
+    pad: int,
     nlayers: int,
     chance: float,
     bg: str,
@@ -97,6 +101,7 @@ def render_truchet_bytes(
         width=width,
         height=height,
         tilew=tilew,
+        padding=pad,
         nlayers=nlayers,
         chance=chance,
         bg=bg,
@@ -111,8 +116,9 @@ def render_truchet_bytes(
 
 try:
     # Get PNG bytes from cache (or render if needed)
+    tilew = width // (ntiles + padding)
     pattern_bytes = render_truchet_bytes(
-        tile_set, width, height, tilew, nlayers, chance, bg_color, fg_color, grid, seed
+        tile_set, width, height, tilew, padding, nlayers, chance, bg_color, fg_color, grid, seed
     )
 
     # Display the pattern
